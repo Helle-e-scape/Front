@@ -12,16 +12,39 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import _ from "lodash";
 
 const { height: screenHeight } = Dimensions.get("window");
+
+// Hook personnalisé pour gérer la visibilité du joueur actuel
+function useCurrentUserVisibility(currentUserPosition, flatListRef) {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const onViewableItemsChanged = _.throttle(({ viewableItems }) => {
+    const visible = viewableItems.some(
+      (item) => item.index === currentUserPosition - 1
+    );
+    setIsVisible(visible);
+  }, 200); // Mise à jour toutes les 200ms
+
+  const scrollToCurrentUser = () => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToIndex({
+        index: currentUserPosition - 1,
+        animated: true,
+      });
+    }
+  };
+
+  return { isVisible, onViewableItemsChanged, scrollToCurrentUser };
+}
 
 const Scoreboard = () => {
   const navigation = useNavigation();
   const flatListRef = useRef(null);
-  const [isCurrentUserVisible, setIsCurrentUserVisible] = useState(false); // Pour contrôler la visibilité du joueur actuel en bas
 
   // Joueur actuel
-  const [currentUser, setCurrentUser] = useState({
+  const [currentUser] = useState({
     position: 50,
     name: "Current Player",
     score: 200,
@@ -36,6 +59,10 @@ const Scoreboard = () => {
 
   players[currentUser.position - 1] = currentUser; // Ajouter explicitement currentUser à sa position dans la liste
 
+  // Utilisation du hook personnalisé
+  const { isVisible, onViewableItemsChanged, scrollToCurrentUser } =
+    useCurrentUserVisibility(currentUser.position, flatListRef);
+
   const handleGoBack = () => {
     navigation.goBack();
   };
@@ -44,7 +71,7 @@ const Scoreboard = () => {
     <View
       style={[
         styles.playerRow,
-        item.position === currentUser.position && isCurrentUserVisible
+        item.position === currentUser.position && isVisible
           ? styles.highlightedPlayer
           : null,
       ]}
@@ -54,23 +81,6 @@ const Scoreboard = () => {
       <Text style={styles.playerText}>{item.score}</Text>
     </View>
   );
-
-  const scrollToCurrentUser = () => {
-    if (flatListRef.current) {
-      flatListRef.current.scrollToIndex({
-        index: currentUser.position - 1,
-        animated: true,
-      });
-    }
-  };
-
-  // Fonction pour vérifier si le currentUser est visible dans la vue
-  const onViewableItemsChanged = ({ viewableItems }) => {
-    const isVisible = viewableItems.some(
-      (item) => item.index === currentUser.position - 1
-    );
-    setIsCurrentUserVisible(isVisible); // Masquer l'utilisateur en bas si visible dans la liste
-  };
 
   const viewabilityConfig = {
     itemVisiblePercentThreshold: 50, // 50% de l'élément doit être visible pour le considérer visible
@@ -100,12 +110,14 @@ const Scoreboard = () => {
           renderItem={renderItem}
           keyExtractor={(item) => item.position.toString()}
           style={styles.playerList}
-          onViewableItemsChanged={onViewableItemsChanged} // Événement déclenché lors du défilement
+          initialNumToRender={20} // Rendre 20 éléments au départ
+          maxToRenderPerBatch={10} // Rendre 10 éléments à la fois pendant le défilement
+          onViewableItemsChanged={onViewableItemsChanged}
           viewabilityConfig={viewabilityConfig}
         />
 
         {/* Joueur actuel affiché en bas (disparaît si visible dans la liste) */}
-        {!isCurrentUserVisible && (
+        {!isVisible && (
           <TouchableOpacity
             style={styles.currentPlayerContainer}
             onPress={scrollToCurrentUser}
@@ -170,7 +182,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   highlightedPlayer: {
-    backgroundColor: "#6200ea", // Surligner en violet
+    backgroundColor: "#6200ea",
   },
   currentPlayerContainer: {
     position: "absolute",
