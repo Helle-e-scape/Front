@@ -39,6 +39,7 @@ const Login = ({ navigation }) => {
             placeholder="Enter your name"
             placeholderTextColor="#888"
             value={name}
+            returnKeyType="go"
             onChangeText={setName}
           />
           <TouchableOpacity style={styles.joinButton} onPress={handleJoinRoom}>
