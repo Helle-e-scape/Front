@@ -13,11 +13,6 @@ const AuthNavigationStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen
-        name="Scoreboard"
-        component={Scoreboard}
-        options={{ title: "Scoreboard" }}
-      />
-      <Stack.Screen
         name="Login"
         component={Login}
         options={{ title: "Login" }}
@@ -29,6 +24,11 @@ const AuthNavigationStack = () => {
         options={{ title: "WaitingRoom" }}
       />
       <Stack.Screen name="Game" component={Game} options={{ title: "Game" }} />
+      <Stack.Screen
+        name="Scoreboard"
+        component={Scoreboard}
+        options={{ title: "Scoreboard" }}
+      />
     </Stack.Navigator>
   );
 };
