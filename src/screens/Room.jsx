@@ -1,25 +1,15 @@
 // src/screens/Room.jsx
 import React, { useState } from "react";
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  Image,
-  ImageBackground,
-  TouchableOpacity,
-  Text,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // Ajout d'une icône pour la flèche retour
-import { useNavigation } from "@react-navigation/native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Image, ImageBackground, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons"; // Pour la flèche de retour
+import { useNavigation } from "@react-navigation/native"; // Pour la navigation
 
-const Room = () => {
+const Room = ({ navigation, route }) => {
+  const { CustomText, CustomTextInput } = route.params; // Récupérer CustomText et CustomTextInput
   const [roomCode, setRoomCode] = useState("");
-  const navigation = useNavigation(); // Utilisation de la navigation pour le retour
 
   const handleJoinGame = () => {
     if (roomCode.trim()) {
-      // Navigation vers WaitingRoom au lieu de l'alerte
       navigation.navigate("WaitingRoom");
     } else {
       alert("Please enter the room code");
@@ -28,46 +18,52 @@ const Room = () => {
 
   return (
     <ImageBackground
-      source={require("../assets/background.jpeg")}
+      source={require("../assets/images/background.jpeg")}
       style={styles.background}
     >
-      <SafeAreaView style={styles.container}>
-        {/* Bouton de retour avec flèche */}
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="arrow-back" size={24} color="white" />
-        </TouchableOpacity>
+      {/* Flèche de retour */}
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Ionicons name="arrow-back" size={24} color="white" />
+      </TouchableOpacity>
 
+      <View style={styles.container}>
         <View style={styles.topSection}>
           <Image
-            source={require("../assets/title.png")}
+            source={require("../assets/images/title.png")}
             style={styles.titleImage}
           />
         </View>
         <View style={styles.bottomSection}>
-          <TextInput
+          <CustomTextInput
             style={styles.input}
-            placeholder="Enter the room code" // Remplacement du label par un placeholder
+            placeholder="Enter the room code"
             placeholderTextColor="#888"
             value={roomCode}
             returnKeyType="go"
             onChangeText={setRoomCode}
           />
           <TouchableOpacity style={styles.joinButton} onPress={handleJoinGame}>
-            <Text style={styles.joinButtonText}>Join the game</Text>
+            <CustomText style={styles.joinButtonText}>Join the game</CustomText>
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
+      </View>
     </ImageBackground>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = {
   background: {
     flex: 1,
     resizeMode: "cover",
+  },
+  backButton: {
+    position: "absolute",
+    top: 50, // Ajuster la position de la flèche
+    left: 20,
+    zIndex: 1,
   },
   container: {
     flex: 1,
@@ -77,30 +73,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: "10%", // Positionne l'image au 1/3 de l'écran
+    marginTop: "10%", // Même positionnement que dans WaitingRoom
   },
   bottomSection: {
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    paddingBottom: "10%", // Pousse l'input et le bouton vers le bas
+    paddingBottom: "10%", // Même positionnement que dans WaitingRoom
   },
   titleImage: {
     width: 200,
     height: 100,
-    resizeMode: "contain",
-  },
-  backButton: {
-    position: "absolute",
-    top: 50, // Ajuste la position du bouton de retour
-    left: 20,
+    resizeMode: "contain", // Même taille que dans WaitingRoom
   },
   input: {
     width: "80%",
     height: 40,
     borderColor: "#ccc",
     borderWidth: 1,
-    backgroundColor: "#fff", // Fond blanc pour l'input
+    backgroundColor: "#fff",
     padding: 10,
     marginBottom: 20,
     borderRadius: 5,
@@ -117,6 +108,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
   },
-});
+};
 
 export default Room;

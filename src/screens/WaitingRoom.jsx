@@ -1,59 +1,57 @@
 // src/screens/WaitingRoom.jsx
 import React from "react";
-import {
-  View,
-  StyleSheet,
-  Image,
-  ImageBackground,
-  TouchableOpacity,
-  Text,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // Ajout d'une icône pour la flèche retour
-import { useNavigation } from "@react-navigation/native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Image, ImageBackground, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons"; // Pour la flèche de retour
+import { useNavigation } from "@react-navigation/native"; // Pour la navigation
 
-const WaitingRoom = () => {
+const WaitingRoom = ({ route }) => {
+  const { CustomText } = route.params;
   const navigation = useNavigation(); // Utilisation de la navigation pour le retour
 
   const handleJoinGame = () => {
-    // Redirige vers la page Game
     navigation.navigate("Game");
   };
 
   return (
     <ImageBackground
-      source={require("../assets/background.jpeg")}
+      source={require("../assets/images/background.jpeg")}
       style={styles.background}
     >
-      <SafeAreaView style={styles.container}>
-        {/* Bouton de retour avec flèche */}
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="arrow-back" size={24} color="white" />
-        </TouchableOpacity>
+      {/* Flèche de retour */}
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Ionicons name="arrow-back" size={24} color="white" />
+      </TouchableOpacity>
 
+      <View style={styles.container}>
         <View style={styles.topSection}>
           <Image
-            source={require("../assets/title.png")}
+            source={require("../assets/images/title.png")}
             style={styles.titleImage}
           />
         </View>
         <View style={styles.bottomSection}>
           <TouchableOpacity style={styles.joinButton} onPress={handleJoinGame}>
-            <Text style={styles.joinButtonText}>Join the game</Text>
+            <CustomText style={styles.joinButtonText}>Join the game</CustomText>
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
+      </View>
     </ImageBackground>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = {
   background: {
     flex: 1,
     resizeMode: "cover",
+  },
+  backButton: {
+    position: "absolute",
+    top: 50, // Ajuste la position de la flèche en haut à gauche
+    left: 20,
+    zIndex: 1,
   },
   container: {
     flex: 1,
@@ -63,23 +61,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: "10%", // Positionne l'image au 1/3 de l'écran
+    marginTop: "10%", // Même positionnement que dans Room.jsx
   },
   bottomSection: {
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    paddingBottom: "10%", // Pousse le bouton vers le bas
+    paddingBottom: "10%", // Même positionnement que dans Room.jsx
   },
   titleImage: {
     width: 200,
     height: 100,
-    resizeMode: "contain",
-  },
-  backButton: {
-    position: "absolute",
-    top: 50, // Ajuste la position du bouton de retour
-    left: 20,
+    resizeMode: "contain", // Même taille que dans Room.jsx
   },
   joinButton: {
     marginTop: 20,
@@ -93,6 +86,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
   },
-});
+};
 
 export default WaitingRoom;

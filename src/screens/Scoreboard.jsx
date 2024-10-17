@@ -2,7 +2,6 @@
 import React, { useState, useRef } from "react";
 import {
   View,
-  Text,
   StyleSheet,
   FlatList,
   ImageBackground,
@@ -39,7 +38,8 @@ function useCurrentUserVisibility(currentUserPosition, flatListRef) {
   return { isVisible, onViewableItemsChanged, scrollToCurrentUser };
 }
 
-const Scoreboard = () => {
+const Scoreboard = ({ route }) => {
+  const { CustomText } = route.params; // Récupérer CustomText
   const navigation = useNavigation();
   const flatListRef = useRef(null);
 
@@ -76,9 +76,9 @@ const Scoreboard = () => {
           : null,
       ]}
     >
-      <Text style={styles.playerText}>{item.position}</Text>
-      <Text style={styles.playerText}>{item.name}</Text>
-      <Text style={styles.playerText}>{item.score}</Text>
+      <CustomText style={styles.playerText}>{item.position}</CustomText>
+      <CustomText style={styles.playerText}>{item.name}</CustomText>
+      <CustomText style={styles.playerText}>{item.score}</CustomText>
     </View>
   );
 
@@ -88,7 +88,7 @@ const Scoreboard = () => {
 
   return (
     <ImageBackground
-      source={require("../assets/background.jpeg")}
+      source={require("../assets/images/background.jpeg")}
       style={styles.background}
     >
       <SafeAreaView style={styles.container}>
@@ -99,8 +99,8 @@ const Scoreboard = () => {
 
         {/* Podium */}
         <View style={styles.podium}>
-          <Text style={styles.podiumText}>Podium</Text>
-          <Text style={styles.podiumSubText}>Top 3 Players</Text>
+          <CustomText style={styles.podiumText}>Podium</CustomText>
+          <CustomText style={styles.podiumSubText}>Top 3 Players</CustomText>
         </View>
 
         {/* Tableau des joueurs */}
@@ -122,11 +122,15 @@ const Scoreboard = () => {
             style={styles.currentPlayerContainer}
             onPress={scrollToCurrentUser}
           >
-            <Text style={styles.currentPlayerText}>
+            <CustomText style={styles.currentPlayerText}>
               #{currentUser.position}
-            </Text>
-            <Text style={styles.currentPlayerText}>{currentUser.name}</Text>
-            <Text style={styles.currentPlayerText}>{currentUser.score}</Text>
+            </CustomText>
+            <CustomText style={styles.currentPlayerText}>
+              {currentUser.name}
+            </CustomText>
+            <CustomText style={styles.currentPlayerText}>
+              {currentUser.score}
+            </CustomText>
           </TouchableOpacity>
         )}
       </SafeAreaView>
