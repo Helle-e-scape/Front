@@ -1,9 +1,16 @@
-// src/screens/Login.jsx
 import React, { useState } from "react";
-import { View, Image, ImageBackground, TouchableOpacity } from "react-native";
+import {
+  View,
+  Image,
+  ImageBackground,
+  TouchableOpacity,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Text, // Import du composant Text de base au cas où
+} from "react-native";
 
 const Login = ({ navigation, route }) => {
-  const { CustomText, CustomTextInput } = route.params;
+  const { CustomText, CustomTextInput } = route.params; // Assurez-vous que CustomText et CustomTextInput sont bien des composants
   const [name, setName] = useState("");
 
   const handleJoinRoom = () => {
@@ -15,32 +22,43 @@ const Login = ({ navigation, route }) => {
   };
 
   return (
-    <ImageBackground
-      source={require("../assets/images/background.jpeg")}
-      style={styles.background}
-    >
-      <View style={styles.container}>
-        <View style={styles.topSection}>
-          <Image
-            source={require("../assets/images/title.png")}
-            style={styles.titleImage}
-          />
-        </View>
-        <View style={styles.bottomSection}>
-          <CustomTextInput
-            style={styles.input}
-            placeholder="Enter your name"
-            placeholderTextColor="#888"
-            value={name}
-            returnKeyType="go"
-            onChangeText={setName}
-          />
-          <TouchableOpacity style={styles.joinButton} onPress={handleJoinRoom}>
-            <CustomText style={styles.joinButtonText}>Join a room</CustomText>
-          </TouchableOpacity>
-        </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={{ flex: 1 }}>
+        <ImageBackground
+          source={require("../assets/images/background.jpeg")}
+          style={styles.background}
+        >
+          <View style={styles.container}>
+            <View style={styles.topSection}>
+              <Image
+                source={require("../assets/images/title.png")}
+                style={styles.titleImage}
+              />
+            </View>
+            <View style={styles.bottomSection}>
+              <CustomTextInput
+                style={styles.input}
+                placeholder="Enter your name"
+                placeholderTextColor="#888"
+                value={name}
+                returnKeyType="go"
+                onChangeText={setName}
+                onSubmitEditing={handleJoinRoom}
+              />
+              <TouchableOpacity
+                style={styles.joinButton}
+                onPress={handleJoinRoom}
+              >
+                <CustomText style={styles.joinButtonText}>
+                  {/* Assurez-vous que tout texte est bien rendu dans un composant Text */}
+                  Join a room
+                </CustomText>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ImageBackground>
       </View>
-    </ImageBackground>
+    </TouchableWithoutFeedback>
   );
 };
 

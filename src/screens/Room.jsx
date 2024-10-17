@@ -1,6 +1,12 @@
-// src/screens/Room.jsx
 import React, { useState } from "react";
-import { View, Image, ImageBackground, TouchableOpacity } from "react-native";
+import {
+  View,
+  Image,
+  ImageBackground,
+  TouchableOpacity,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // Pour la flèche de retour
 import { useNavigation } from "@react-navigation/native"; // Pour la navigation
 
@@ -17,40 +23,50 @@ const Room = ({ navigation, route }) => {
   };
 
   return (
-    <ImageBackground
-      source={require("../assets/images/background.jpeg")}
-      style={styles.background}
-    >
-      {/* Flèche de retour */}
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Ionicons name="arrow-back" size={24} color="white" />
-      </TouchableOpacity>
-
-      <View style={styles.container}>
-        <View style={styles.topSection}>
-          <Image
-            source={require("../assets/images/title.png")}
-            style={styles.titleImage}
-          />
-        </View>
-        <View style={styles.bottomSection}>
-          <CustomTextInput
-            style={styles.input}
-            placeholder="Enter the room code"
-            placeholderTextColor="#888"
-            value={roomCode}
-            returnKeyType="go"
-            onChangeText={setRoomCode}
-          />
-          <TouchableOpacity style={styles.joinButton} onPress={handleJoinGame}>
-            <CustomText style={styles.joinButtonText}>Join the game</CustomText>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={{ flex: 1 }}>
+        <ImageBackground
+          source={require("../assets/images/background.jpeg")}
+          style={styles.background}
+        >
+          {/* Flèche de retour */}
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
-        </View>
+
+          <View style={styles.container}>
+            <View style={styles.topSection}>
+              <Image
+                source={require("../assets/images/title.png")}
+                style={styles.titleImage}
+              />
+            </View>
+            <View style={styles.bottomSection}>
+              <CustomTextInput
+                style={styles.input}
+                placeholder="Enter the room code"
+                placeholderTextColor="#888"
+                value={roomCode}
+                returnKeyType="go"
+                onChangeText={setRoomCode}
+                onSubmitEditing={handleJoinGame} // Appelle handleJoinGame quand "go" est pressé
+              />
+              <TouchableOpacity
+                style={styles.joinButton}
+                onPress={handleJoinGame}
+              >
+                <CustomText style={styles.joinButtonText}>
+                  Join the game
+                </CustomText>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ImageBackground>
       </View>
-    </ImageBackground>
+    </TouchableWithoutFeedback>
   );
 };
 
