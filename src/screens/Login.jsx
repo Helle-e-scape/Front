@@ -1,5 +1,6 @@
 // src/screens/Login.jsx
 import React, { useState } from "react";
+import PixelButton from "../components/Button";
 import {
   View,
   TextInput,
@@ -8,6 +9,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   Text,
+  Button,
 } from "react-native";
 
 const Login = ({ navigation }) => {
@@ -41,9 +43,8 @@ const Login = ({ navigation }) => {
             value={name}
             onChangeText={setName}
           />
-          <TouchableOpacity style={styles.joinButton} onPress={handleJoinRoom}>
-            <Text style={styles.joinButtonText}>Join a room</Text>
-          </TouchableOpacity>
+          <PixelButton title={"Let's Play"} onPress={handleJoinRoom}/>
+          
         </View>
       </View>
     </ImageBackground>

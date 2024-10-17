@@ -1,6 +1,7 @@
 // src/screens/WaitingRoom.jsx
-import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, ImageBackground, FlatList, Image} from "react-native";
+import React, { useState, useRef, useEffect } from "react";
+import { View, Text, TextInput, Button, StyleSheet, ImageBackground, FlatList, Image, PanResponder} from "react-native";
+import ButtonPerso from "../components/Element";
 
 const WaitingRoom = () => {
     const [playerList, setPlayerList] = useState([
@@ -10,8 +11,63 @@ const WaitingRoom = () => {
         { id: '4', name: 'Maxime' },
         { id: '5', name: 'Archantrax'},
         { id: '6', name: 'Hugo'},
+        { id: '7', name: 'Archantrax'},
+        { id: '8', name: 'Hugo'},
+        { id: '9', name: 'Archantrax'},
+        { id: '10', name: 'Hugo'},
       ]);
-    
+      const flatListRef = useRef(null);
+      const scrollOffset = useRef(0);   
+      const [isScrolling, setIsScrolling] = useState(true);
+      const scrollTimeoutRef = useRef(null);
+
+      useEffect(() => {
+        const startScrolling = () => {
+            scrollTimeoutRef.current = setInterval(() => {
+                if (isScrolling && flatListRef.current) {
+                    scrollOffset.current += 1; 
+                    flatListRef.current.scrollToOffset({ offset: scrollOffset.current, animated: true });
+                }
+            }, 100);  
+        };
+
+        startScrolling(); 
+
+        return () => {
+            if (scrollTimeoutRef.current) {
+                clearInterval(scrollTimeoutRef.current);  
+            }
+        };
+    }, [isScrolling]);
+
+    const stopScrolling = () => {
+        setIsScrolling(false);
+        if (scrollTimeoutRef.current) {
+            clearInterval(scrollTimeoutRef.current); 
+        }
+    };
+
+    const restartScrolling = () => {
+        if (scrollTimeoutRef.current) {
+            clearTimeout(scrollTimeoutRef.current);
+        }
+        scrollTimeoutRef.current = setTimeout(() => {
+            setIsScrolling(true);  
+        }, 10000);  
+    };
+
+    const panResponder = useRef(
+        PanResponder.create({
+            onStartShouldSetPanResponder: () => true,  
+            onPanResponderGrant: () => {
+                stopScrolling();
+            },
+            onPanResponderRelease: () => {
+                restartScrolling();  
+            },
+        })
+    ).current;
+
 
     return (
         <ImageBackground
@@ -26,10 +82,11 @@ const WaitingRoom = () => {
           </View>
           <Text style={styles.title}>Players List</Text>
           <FlatList
+            ref={flatListRef}
             data={playerList}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-              <Text style={styles.playerName}>{item.name}</Text>
+              <ButtonPerso title={item.name} style={styles.playerName}></ButtonPerso>
             )}
           />
         </View>
