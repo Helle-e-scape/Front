@@ -5,29 +5,49 @@ import Login from "../screens/Login";
 import Room from "../screens/Room";
 import WaitingRoom from "../screens/WaitingRoom";
 import Game from "../screens/Game";
-import Scoreboard from "../screens/Scoreboard"; // Import de Scoreboard
+import Scoreboard from "../screens/Scoreboard";
+import Trap from "../screens/Trap"; // Import de l'écran Trap
 
 const Stack = createStackNavigator();
 
-const AuthNavigationStack = () => {
+const AuthNavigationStack = ({ CustomText, CustomTextInput }) => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen
         name="Login"
         component={Login}
         options={{ title: "Login" }}
+        initialParams={{ CustomText, CustomTextInput }}
       />
-      <Stack.Screen name="Room" component={Room} options={{ title: "Room" }} />
+      <Stack.Screen
+        name="Room"
+        component={Room}
+        options={{ title: "Room" }}
+        initialParams={{ CustomText, CustomTextInput }}
+      />
       <Stack.Screen
         name="WaitingRoom"
         component={WaitingRoom}
         options={{ title: "WaitingRoom" }}
+        initialParams={{ CustomText, CustomTextInput }}
       />
-      <Stack.Screen name="Game" component={Game} options={{ title: "Game" }} />
+      <Stack.Screen
+        name="Game"
+        component={Game}
+        options={{ title: "Game" }}
+        initialParams={{ CustomText, CustomTextInput }}
+      />
       <Stack.Screen
         name="Scoreboard"
         component={Scoreboard}
         options={{ title: "Scoreboard" }}
+        initialParams={{ CustomText, CustomTextInput }}
+      />
+      <Stack.Screen
+        name="Trap"
+        component={Trap} // Ajout de l'écran Trap
+        options={{ title: "Trap" }}
+        initialParams={{ CustomText, CustomTextInput }}
       />
     </Stack.Navigator>
   );

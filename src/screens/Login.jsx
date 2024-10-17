@@ -1,16 +1,9 @@
 // src/screens/Login.jsx
 import React, { useState } from "react";
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  Image,
-  ImageBackground,
-  TouchableOpacity,
-  Text,
-} from "react-native";
+import { View, Image, ImageBackground, TouchableOpacity } from "react-native";
 
-const Login = ({ navigation }) => {
+const Login = ({ navigation, route }) => {
+  const { CustomText, CustomTextInput } = route.params;
   const [name, setName] = useState("");
 
   const handleJoinRoom = () => {
@@ -23,18 +16,18 @@ const Login = ({ navigation }) => {
 
   return (
     <ImageBackground
-      source={require("../assets/background.jpeg")}
+      source={require("../assets/images/background.jpeg")}
       style={styles.background}
     >
       <View style={styles.container}>
         <View style={styles.topSection}>
           <Image
-            source={require("../assets/title.png")}
+            source={require("../assets/images/title.png")}
             style={styles.titleImage}
           />
         </View>
         <View style={styles.bottomSection}>
-          <TextInput
+          <CustomTextInput
             style={styles.input}
             placeholder="Enter your name"
             placeholderTextColor="#888"
@@ -43,7 +36,7 @@ const Login = ({ navigation }) => {
             onChangeText={setName}
           />
           <TouchableOpacity style={styles.joinButton} onPress={handleJoinRoom}>
-            <Text style={styles.joinButtonText}>Join a room</Text>
+            <CustomText style={styles.joinButtonText}>Join a room</CustomText>
           </TouchableOpacity>
         </View>
       </View>
@@ -51,7 +44,7 @@ const Login = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = {
   background: {
     flex: 1,
     resizeMode: "cover",
@@ -64,13 +57,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: "10%", // Ajuste la position de l'image au 1/3 de l'écran
+    marginTop: "10%",
   },
   bottomSection: {
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    paddingBottom: "10%", // Pousse l'input et le bouton vers le bas
+    paddingBottom: "10%",
   },
   titleImage: {
     width: 200,
@@ -82,7 +75,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: "#ccc",
     borderWidth: 1,
-    backgroundColor: "#fff", // Fond blanc pour l'input
+    backgroundColor: "#fff",
     padding: 10,
     marginBottom: 20,
     borderRadius: 5,
@@ -99,6 +92,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
   },
-});
+};
 
 export default Login;

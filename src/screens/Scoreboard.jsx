@@ -2,7 +2,6 @@
 import React, { useState, useRef } from "react";
 import {
   View,
-  Text,
   StyleSheet,
   FlatList,
   ImageBackground,
@@ -12,16 +11,40 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import _ from "lodash";
 
 const { height: screenHeight } = Dimensions.get("window");
 
-const Scoreboard = () => {
+// Hook personnalisé pour gérer la visibilité du joueur actuel
+function useCurrentUserVisibility(currentUserPosition, flatListRef) {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const onViewableItemsChanged = _.throttle(({ viewableItems }) => {
+    const visible = viewableItems.some(
+      (item) => item.index === currentUserPosition - 1
+    );
+    setIsVisible(visible);
+  }, 200); // Mise à jour toutes les 200ms
+
+  const scrollToCurrentUser = () => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToIndex({
+        index: currentUserPosition - 1,
+        animated: true,
+      });
+    }
+  };
+
+  return { isVisible, onViewableItemsChanged, scrollToCurrentUser };
+}
+
+const Scoreboard = ({ route }) => {
+  const { CustomText } = route.params; // Récupérer CustomText
   const navigation = useNavigation();
   const flatListRef = useRef(null);
-  const [isCurrentUserVisible, setIsCurrentUserVisible] = useState(false); // Pour contrôler la visibilité du joueur actuel en bas
 
   // Joueur actuel
-  const [currentUser, setCurrentUser] = useState({
+  const [currentUser] = useState({
     position: 50,
     name: "Current Player",
     score: 200,
@@ -36,6 +59,10 @@ const Scoreboard = () => {
 
   players[currentUser.position - 1] = currentUser; // Ajouter explicitement currentUser à sa position dans la liste
 
+  // Utilisation du hook personnalisé
+  const { isVisible, onViewableItemsChanged, scrollToCurrentUser } =
+    useCurrentUserVisibility(currentUser.position, flatListRef);
+
   const handleGoBack = () => {
     navigation.goBack();
   };
@@ -44,33 +71,16 @@ const Scoreboard = () => {
     <View
       style={[
         styles.playerRow,
-        item.position === currentUser.position && isCurrentUserVisible
+        item.position === currentUser.position && isVisible
           ? styles.highlightedPlayer
           : null,
       ]}
     >
-      <Text style={styles.playerText}>{item.position}</Text>
-      <Text style={styles.playerText}>{item.name}</Text>
-      <Text style={styles.playerText}>{item.score}</Text>
+      <CustomText style={styles.playerText}>{item.position}</CustomText>
+      <CustomText style={styles.playerText}>{item.name}</CustomText>
+      <CustomText style={styles.playerText}>{item.score}</CustomText>
     </View>
   );
-
-  const scrollToCurrentUser = () => {
-    if (flatListRef.current) {
-      flatListRef.current.scrollToIndex({
-        index: currentUser.position - 1,
-        animated: true,
-      });
-    }
-  };
-
-  // Fonction pour vérifier si le currentUser est visible dans la vue
-  const onViewableItemsChanged = ({ viewableItems }) => {
-    const isVisible = viewableItems.some(
-      (item) => item.index === currentUser.position - 1
-    );
-    setIsCurrentUserVisible(isVisible); // Masquer l'utilisateur en bas si visible dans la liste
-  };
 
   const viewabilityConfig = {
     itemVisiblePercentThreshold: 50, // 50% de l'élément doit être visible pour le considérer visible
@@ -78,7 +88,7 @@ const Scoreboard = () => {
 
   return (
     <ImageBackground
-      source={require("../assets/background.jpeg")}
+      source={require("../assets/images/background.jpeg")}
       style={styles.background}
     >
       <SafeAreaView style={styles.container}>
@@ -89,8 +99,8 @@ const Scoreboard = () => {
 
         {/* Podium */}
         <View style={styles.podium}>
-          <Text style={styles.podiumText}>Podium</Text>
-          <Text style={styles.podiumSubText}>Top 3 Players</Text>
+          <CustomText style={styles.podiumText}>Podium</CustomText>
+          <CustomText style={styles.podiumSubText}>Top 3 Players</CustomText>
         </View>
 
         {/* Tableau des joueurs */}
@@ -100,21 +110,27 @@ const Scoreboard = () => {
           renderItem={renderItem}
           keyExtractor={(item) => item.position.toString()}
           style={styles.playerList}
-          onViewableItemsChanged={onViewableItemsChanged} // Événement déclenché lors du défilement
+          initialNumToRender={20} // Rendre 20 éléments au départ
+          maxToRenderPerBatch={10} // Rendre 10 éléments à la fois pendant le défilement
+          onViewableItemsChanged={onViewableItemsChanged}
           viewabilityConfig={viewabilityConfig}
         />
 
         {/* Joueur actuel affiché en bas (disparaît si visible dans la liste) */}
-        {!isCurrentUserVisible && (
+        {!isVisible && (
           <TouchableOpacity
             style={styles.currentPlayerContainer}
             onPress={scrollToCurrentUser}
           >
-            <Text style={styles.currentPlayerText}>
+            <CustomText style={styles.currentPlayerText}>
               #{currentUser.position}
-            </Text>
-            <Text style={styles.currentPlayerText}>{currentUser.name}</Text>
-            <Text style={styles.currentPlayerText}>{currentUser.score}</Text>
+            </CustomText>
+            <CustomText style={styles.currentPlayerText}>
+              {currentUser.name}
+            </CustomText>
+            <CustomText style={styles.currentPlayerText}>
+              {currentUser.score}
+            </CustomText>
           </TouchableOpacity>
         )}
       </SafeAreaView>
@@ -170,7 +186,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   highlightedPlayer: {
-    backgroundColor: "#6200ea", // Surligner en violet
+    backgroundColor: "#6200ea",
   },
   currentPlayerContainer: {
     position: "absolute",
