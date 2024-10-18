@@ -8,14 +8,22 @@ import {
   TouchableWithoutFeedback,
   Text, // Import du composant Text de base au cas où
 } from "react-native";
+import axios from "axios";
+import { useUser } from "../context/UserContext";
+import {BACKEND_URL} from "@env";
 
 const Login = ({ navigation, route }) => {
   const { CustomText, CustomTextInput } = route.params; // Assurez-vous que CustomText et CustomTextInput sont bien des composants
   const [name, setName] = useState("");
+  const { setUser } = useUser();
 
   const handleJoinRoom = () => {
     if (name.trim()) {
-      navigation.navigate("Room");
+      axios.post(`${BACKEND_URL}/auth/register`, { pseudo: name }).then((response) => {
+        setUser(response.data.user);
+        navigation.navigate("Room");
+      });
+
     } else {
       alert("Please enter your name");
     }

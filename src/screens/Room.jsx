@@ -7,15 +7,22 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
+import axios from "axios";
+import { useUser } from "../context/UserContext";
+import {BACKEND_URL} from "@env";
 import { Ionicons } from "@expo/vector-icons"; // Pour la flèche de retour
 import { useNavigation } from "@react-navigation/native"; // Pour la navigation
 
 const Room = ({ navigation, route }) => {
   const { CustomText, CustomTextInput } = route.params; // Récupérer CustomText et CustomTextInput
   const [roomCode, setRoomCode] = useState("");
+  const { user } = useUser();
 
-  const handleJoinGame = () => {
+
+  const handleJoinGame = async () => {
     if (roomCode.trim()) {
+      axios.put(`${BACKEND_URL}/room/userJoin`, { roomCode, _id: user._id });
+      alert(`Joining room with code: ${roomCode}`);
       navigation.navigate("WaitingRoom");
     } else {
       alert("Please enter the room code");
