@@ -1,14 +1,22 @@
 // src/screens/Room.jsx
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import axios from "axios";
+import { useUser } from "../context/UserContext";
+import {BACKEND_URL} from "@env";
+
+
 
 const Room = () => {
   const [roomCode, setRoomCode] = useState("");
+  const { user } = useUser();
 
-  const handleJoinGame = () => {
+
+  const handleJoinGame = async () => {
     if (roomCode.trim()) {
+      axios.put(`${BACKEND_URL}/room/userJoin`, { roomCode, _id: user._id });
       alert(`Joining room with code: ${roomCode}`);
-      // Ici, on pourrait ajouter la logique pour rejoindre la salle
+
     } else {
       alert("Please enter the room code");
     }

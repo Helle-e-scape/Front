@@ -1,5 +1,5 @@
 // src/screens/Login.jsx
-import React, { useState } from "react";
+import React, {useState } from "react";
 import {
   View,
   TextInput,
@@ -9,13 +9,21 @@ import {
   TouchableOpacity,
   Text,
 } from "react-native";
+import axios from "axios";
+import { useUser } from "../context/UserContext";
+import {BACKEND_URL} from "@env";
 
 const Login = ({ navigation }) => {
   const [name, setName] = useState("");
+  const { setUser } = useUser();
 
   const handleJoinRoom = () => {
     if (name.trim()) {
-      navigation.navigate("Room");
+      axios.post(`${BACKEND_URL}/auth/register`, { pseudo: name }).then((response) => {
+        setUser(response.data.user);
+        navigation.navigate("Room");
+      });
+
     } else {
       alert("Please enter your name");
     }
