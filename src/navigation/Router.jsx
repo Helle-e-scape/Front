@@ -3,10 +3,13 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import AuthNavigationStack from "./AuthNavigationStack";
 
-const Router = () => {
+const Router = ({ CustomText, CustomTextInput }) => {
   return (
     <NavigationContainer>
-      <AuthNavigationStack />
+      <AuthNavigationStack
+        CustomText={CustomText}
+        CustomTextInput={CustomTextInput}
+      />
     </NavigationContainer>
   );
 };
