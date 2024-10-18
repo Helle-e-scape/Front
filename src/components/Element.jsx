@@ -1,6 +1,6 @@
 // src/screens/Button.jsx
-import React, { useRef, useState } from "react";
-import { Animated, View, StyleSheet, PanResponder, Text, TextInput, Button, TouchableOpacity} from "react-native";
+import React, { useRef } from "react";
+import { Animated, View, StyleSheet, PanResponder, Text} from "react-native";
 
 const ButtonPerso = ({title}) => {
     const pan = useRef(new Animated.ValueXY()).current;

@@ -25,13 +25,13 @@ const Login = ({ navigation }) => {
 
   return (
     <ImageBackground
-      source={require("../assets/background.jpeg")}
+      source={require("../assets/images/background.jpeg")}
       style={styles.background}
     >
       <View style={styles.container}>
         <View style={styles.topSection}>
           <Image
-            source={require("../assets/title.png")}
+            source={require("../assets/images/title.png")}
             style={styles.titleImage}
           />
         </View>
@@ -43,7 +43,7 @@ const Login = ({ navigation }) => {
             value={name}
             onChangeText={setName}
           />
-          <PixelButton title={"Let's Play"} onPress={handleJoinRoom}/>
+          <PixelButton title={"Room"} onPress={handleJoinRoom}/>
           
         </View>
       </View>
@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 20,
     borderRadius: 5,
+    fontFamily: "Minecraft",
   },
   joinButton: {
     marginTop: 20,

@@ -71,17 +71,17 @@ const WaitingRoom = () => {
 
     return (
         <ImageBackground
-        source={require("../assets/background.jpeg")}
+        source={require("../assets/images/background.jpeg")}
         style={styles.background}>
         <View style={styles.container}>
         <View style={styles.topSection}>
           <Image
-            source={require("../assets/title.png")}
+            source={require("../assets/images/title.png")}
             style={styles.titleImage}
           />
           </View>
           <Text style={styles.title}>Players List</Text>
-          <FlatList
+          <FlatList style={styles.list}
             ref={flatListRef}
             data={playerList}
             keyExtractor={(item) => item.id}
@@ -104,12 +104,13 @@ const WaitingRoom = () => {
             justifyContent: "space-between",
           },
         list: {
-            justifyContent: "center",
-            alignItems: "center",
+            flex: 1,
+            marginBottom: "20%",
         },
         title: {
             textAlign: "center",
             color: "white",
+            marginBottom: "10%",
           },
         topSection: {
             flex: 1,

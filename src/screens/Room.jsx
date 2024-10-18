@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 10,
     textAlign: "center",
+    fontFamily: "Minecraft-Regular",
   },
   input: {
     height: 40,
