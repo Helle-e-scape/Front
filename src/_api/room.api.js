@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { requestOptions } from '../_helpers/request-options'; // Import des en-têtes
+import {BACKEND_URL} from "@env";
 
-const END_POINT = `${process.env.API_URL}/room`;
+const END_POINT = BACKEND_URL + '/room';
 
 export const authApi = {
     creatRoom,
@@ -11,21 +11,21 @@ export const authApi = {
 
 function creatRoom(name) {
   return axios
-    .post(`${END_POINT}/create`, name, requestOptions.headers())
+    .post(`${END_POINT}/create`, { name: name})
     .then(response => response.data)
     .catch((error) => console.error(error));
 }
 
-function userJoinRoom(idUser, idRoom) {
+function userJoinRoom(idUser, roomId) {
     return axios
-    .put(`${END_POINT}/userJoin`, idUser, idRoom, requestOptions.headers())
+    .put(`${END_POINT}/userJoin`, { _id: idUser }, { roomId: roomId })
     .then(response => response.data)
     .catch((error) => console.error(error));
 }
 
 function deleteRoom(id) {
-    return axios
-    .delete(`${END_POINT}/delete`, id, requestOptions.headers())
+    return axiosroomId
+    .delete(`${END_POINT}/delete`, { _id: id })
     .then(response => response.data)
     .catch((error) => console.error(error));
 }

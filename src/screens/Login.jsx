@@ -15,6 +15,7 @@ import {
 import axios from "axios";
 import { useUser } from "../context/UserContext";
 import {BACKEND_URL} from "@env";
+import userApi from "../_api/user.api";
 
 const Login = ({ navigation, route }) => {
   const { CustomText, CustomTextInput } = route.params; // Assurez-vous que CustomText et CustomTextInput sont bien des composants
@@ -23,11 +24,14 @@ const Login = ({ navigation, route }) => {
 
   const handleJoinRoom = () => {
     if (name.trim()) {
-      axios.post(`${BACKEND_URL}/auth/register`, { pseudo: name }).then((response) => {
-        setUser(response.data.user);
-      navigation.navigate("Room");
+      userApi.creatUser(name.trim())
+      .then(response => {
+        setUser(response.user);  
+        navigation.navigate("Room");  
+      })
+      .catch(error => {
+        console.error("Error during registration: ", error);
       });
-
     } else {
       alert("Please enter your name");
     }

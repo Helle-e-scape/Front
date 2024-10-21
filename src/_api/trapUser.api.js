@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { requestOptions } from '../_helpers/request-options'; // Import des en-têtes
+import {BACKEND_URL} from "@env";
 
-const END_POINT = `${process.env.API_URL}/trapUser`;
+const END_POINT = BACKEND_URL + "/trapUser";
 
 export const authApi = {
     createTrap,
@@ -11,21 +11,21 @@ export const authApi = {
 
 function createTrap(location, userId, nameTrap, roomId) {
   return axios
-    .post(`${END_POINT}/createTrap`, location, userId, nameTrap, roomId, requestOptions.headers())
+    .post(`${END_POINT}/createTrap`, { location: location }, { userId: userId  }, { nameTrap: nameTrap  }, { roomId: roomId } )
     .then(response => response.data)
     .catch((error) => console.error(error));
 }
 
 function findAllByIdRoom(idRoom) {
     return axios
-    .post(`${END_POINT}/findAllByIdRoom`, idRoom, requestOptions.headers())
+    .post(`${END_POINT}/findAllByIdRoom`, idRoom )
     .then(response => response.data)
     .catch((error) => console.error(error));
 }
 
 function update(_id, location) {
     return axios
-    .put(`${END_POINT}/update`, _id, location, requestOptions.headers())
+    .put(`${END_POINT}/update`, _id, location )
     .then(response => response.data)
     .catch((error) => console.error(error));
 }
