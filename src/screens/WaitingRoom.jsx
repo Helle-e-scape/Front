@@ -21,7 +21,7 @@ const WaitingRoom = () => {
       const [isScrolling, setIsScrolling] = useState(true);
       const scrollTimeoutRef = useRef(null);
 
-      useEffect(() => {
+      /*useEffect(() => {
         const startScrolling = () => {
             scrollTimeoutRef.current = setInterval(() => {
                 if (isScrolling && flatListRef.current) {
@@ -66,7 +66,7 @@ const WaitingRoom = () => {
                 restartScrolling();  
             },
         })
-    ).current;
+    ).current;*/
 
 
     return (
@@ -80,7 +80,7 @@ const WaitingRoom = () => {
             style={styles.titleImage}
           />
           </View>
-          <Text style={styles.title}>Players List</Text>
+          <Text  style={styles.title}>Players List</Text>
           <FlatList style={styles.list}
             ref={flatListRef}
             data={playerList}
