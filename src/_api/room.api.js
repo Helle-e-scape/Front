@@ -9,18 +9,24 @@ export const authApi = {
     deleteRoom,
 };
 
-function creatRoom(name) {
-  return axios
-    .post(`${END_POINT}/create`, { name: name})
-    .then(response => response.data)
-    .catch((error) => console.error(error));
+async function creatRoom(name) {
+  try {
+        const response = await axios
+            .post(`${END_POINT}/create`, { name: name });
+        return response.data;
+    } catch (error) {
+        return console.error(error);
+    }
 }
 
-function userJoinRoom(idUser, roomId) {
-    return axios
-    .put(`${END_POINT}/userJoin`, { _id: idUser }, { roomId: roomId })
-    .then(response => response.data)
-    .catch((error) => console.error(error));
+async function userJoinRoom(idUser, roomId) {
+    try {
+        const response = await axios
+            .put(`${END_POINT}/userJoin`, { _id: idUser }, { roomId: roomId });
+        return response.data;
+    } catch (error) {
+        return console.error(error);
+    }
 }
 
 function deleteRoom(id) {

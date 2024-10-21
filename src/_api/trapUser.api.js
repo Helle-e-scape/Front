@@ -9,23 +9,32 @@ export const authApi = {
     update,
 };
 
-function createTrap(location, userId, nameTrap, roomId) {
-  return axios
-    .post(`${END_POINT}/createTrap`, { location: location }, { userId: userId  }, { nameTrap: nameTrap  }, { roomId: roomId } )
-    .then(response => response.data)
-    .catch((error) => console.error(error));
+async function createTrap(location, userId, nameTrap, roomId) {
+  try {
+        const response = await axios
+            .post(`${END_POINT}/createTrap`, { location: location }, { userId: userId }, { nameTrap: nameTrap }, { roomId: roomId });
+        return response.data;
+    } catch (error) {
+        return console.error(error);
+    }
 }
 
-function findAllByIdRoom(idRoom) {
-    return axios
-    .post(`${END_POINT}/findAllByIdRoom`, idRoom )
-    .then(response => response.data)
-    .catch((error) => console.error(error));
+async function findAllByIdRoom(idRoom) {
+    try {
+        const response = await axios
+            .post(`${END_POINT}/findAllByIdRoom`, idRoom);
+        return response.data;
+    } catch (error) {
+        return console.error(error);
+    }
 }
 
-function update(_id, location) {
-    return axios
-    .put(`${END_POINT}/update`, _id, location )
-    .then(response => response.data)
-    .catch((error) => console.error(error));
+async function update(_id, location) {
+    try {
+        const response = await axios
+            .put(`${END_POINT}/update`, _id, location);
+        return response.data;
+    } catch (error) {
+        return console.error(error);
+    }
 }
