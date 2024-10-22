@@ -9,6 +9,7 @@ import WaitingRoom from "../screens/WaitingRoom";
 import Game from "../screens/Game";
 import Scoreboard from "../screens/Scoreboard";
 import Trap from "../screens/Trap"; // Import de l'écran Trap
+import Grid from "../screens/Grid"; // Import de l'écran Grid
 
 const Stack = createStackNavigator();
 
@@ -51,6 +52,12 @@ const AuthNavigationStack = ({ CustomText, CustomTextInput }) => {
         name="Trap"
         component={Trap} // Ajout de l'écran Trap
         options={{ title: "Trap" }}
+        initialParams={{ CustomText, CustomTextInput }}
+      />
+      <Stack.Screen
+        name="Grid"
+        component={Grid} // Ajout de l'écran Grid
+        options={{ title: "Grid" }}
         initialParams={{ CustomText, CustomTextInput }}
       />
     </Stack.Navigator>
