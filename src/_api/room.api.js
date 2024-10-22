@@ -3,7 +3,7 @@ import {BACKEND_URL} from "@env";
 
 const END_POINT = BACKEND_URL + '/room';
 
-export const authApi = {
+export const roomApi = {
     creatRoom,
     userJoinRoom,
     deleteRoom,

@@ -3,7 +3,7 @@ import {BACKEND_URL} from "@env";
 
 const END_POINT = BACKEND_URL + "/trapUser";
 
-export const authApi = {
+export const trapUserApi = {
     createTrap,
     findAllByIdRoom,
     update,
