@@ -7,9 +7,8 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import axios from "axios";
+import { roomApi } from "../_api/room.api";
 import { useUser } from "../context/UserContext";
-import {BACKEND_URL} from "@env";
 import { Ionicons } from "@expo/vector-icons"; // Pour la flèche de retour
 import { useNavigation } from "@react-navigation/native"; // Pour la navigation
 
@@ -21,7 +20,7 @@ const Room = ({ navigation, route }) => {
 
   const handleJoinGame = async () => {
     if (roomCode.trim()) {
-      axios.put(`${BACKEND_URL}/room/userJoin`, { roomCode, _id: user._id });
+      roomApi.userJoinRoom(user.id, roomCode)
       alert(`Joining room with code: ${roomCode}`);
       navigation.navigate("WaitingRoom");
     } else {
