@@ -1,6 +1,10 @@
+// src/screens/Login.jsx
 import React, { useState } from "react";
+import PixelButton from "../components/Button";
 import {
   View,
+  TextInput,
+  StyleSheet,
   Image,
   ImageBackground,
   TouchableOpacity,
@@ -8,9 +12,8 @@ import {
   TouchableWithoutFeedback,
   Text, // Import du composant Text de base au cas où
 } from "react-native";
-import axios from "axios";
 import { useUser } from "../context/UserContext";
-import {BACKEND_URL} from "@env";
+import { authApi } from "../_api/user.api";
 
 const Login = ({ navigation, route }) => {
   const { CustomText, CustomTextInput } = route.params; // Assurez-vous que CustomText et CustomTextInput sont bien des composants
@@ -19,11 +22,14 @@ const Login = ({ navigation, route }) => {
 
   const handleJoinRoom = () => {
     if (name.trim()) {
-      axios.post(`${BACKEND_URL}/auth/register`, { pseudo: name }).then((response) => {
-        setUser(response.data.user);
-        navigation.navigate("Room");
+      authApi.creatUser(name.trim())
+      .then(response => {
+        setUser(response.user);  
+        navigation.navigate("Room");  
+      })
+      .catch(error => {
+        console.error("Error during registration: ", error);
       });
-
     } else {
       alert("Please enter your name");
     }
@@ -32,27 +38,27 @@ const Login = ({ navigation, route }) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={{ flex: 1 }}>
-        <ImageBackground
-          source={require("../assets/images/background.jpeg")}
-          style={styles.background}
-        >
-          <View style={styles.container}>
-            <View style={styles.topSection}>
-              <Image
-                source={require("../assets/images/title.png")}
-                style={styles.titleImage}
-              />
-            </View>
-            <View style={styles.bottomSection}>
+    <ImageBackground
+      source={require("../assets/images/background.jpeg")}
+      style={styles.background}
+    >
+      <View style={styles.container}>
+        <View style={styles.topSection}>
+          <Image
+            source={require("../assets/images/title.png")}
+            style={styles.titleImage}
+          />
+        </View>
+        <View style={styles.bottomSection}>
               <CustomTextInput
-                style={styles.input}
-                placeholder="Enter your name"
-                placeholderTextColor="#888"
-                value={name}
+            style={styles.input}
+            placeholder="Enter your name"
+            placeholderTextColor="#888"
+            value={name}
                 returnKeyType="go"
-                onChangeText={setName}
+            onChangeText={setName}
                 onSubmitEditing={handleJoinRoom}
-              />
+          />
               <TouchableOpacity
                 style={styles.joinButton}
                 onPress={handleJoinRoom}
@@ -62,9 +68,9 @@ const Login = ({ navigation, route }) => {
                   Join a room
                 </CustomText>
               </TouchableOpacity>
-            </View>
-          </View>
-        </ImageBackground>
+        </View>
+      </View>
+    </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
   );
