@@ -1,6 +1,7 @@
 // src/screens/Login.jsx
 import React, { useState } from "react";
 import PixelButton from "../components/Button";
+import InputPerso from "../components/Input";
 import {
   View,
   TextInput,
@@ -11,9 +12,16 @@ import {
   Text,
   Button,
 } from "react-native";
+import { useUser } from "../context/UserContext";
+import { authApi } from "../_api/user.api";
 
 const Login = ({ navigation }) => {
   const [name, setName] = useState("");
+  const { setUser } = useUser();
+
+  const handleInputName = (text) => {
+    setName(text);
+  }
 
   const handleJoinRoom = () => {
     if (name.trim()) {
@@ -36,15 +44,8 @@ const Login = ({ navigation }) => {
           />
         </View>
         <View style={styles.bottomSection}>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your name"
-            placeholderTextColor="#888"
-            value={name}
-            onChangeText={setName}
-          />
+          <InputPerso placeholder={"Enter your name"} onInputChange={handleInputName} />
           <PixelButton title={"Room"} onPress={handleJoinRoom}/>
-          
         </View>
       </View>
     </ImageBackground>

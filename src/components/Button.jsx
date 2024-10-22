@@ -1,3 +1,4 @@
+// src/screens/Button.jsx
 import React, { useState } from "react";
 import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -5,16 +6,18 @@ import { useNavigation } from "@react-navigation/native";
 
 const PixelButton = ({ title }) => {
   const [isPressed, setIsPressed] = useState(false);
-  const navigation = useNavigation(); // État pour savoir si le bouton est pressé
+  const navigation = useNavigation();
 
   const handlePress = () => {
-    setIsPressed(true); // Une fois pressé, rester dans l'état pressé
-    navigation.navigate(title);
+    setIsPressed(true); 
+    setTimeout(() => {
+      navigation.navigate(title);
+    }, 1000);
   };
 
   setTimeout(() => {
     setIsPressed(false); // Revenir à l'état non pressé
-  }, 500); // Durée de l'animation (500ms ici)
+  }, 250);
 
   // Retarder la navigation pour montrer l'animation avant de changer d'écran
   /*setTimeout(() => {
@@ -58,6 +61,9 @@ const styles = StyleSheet.create({
     color: 'black',
     fontFamily: 'monospace', 
   },
+  buttonImage: {
+    marginTop: '30%',
+  }
 });
 
 export default PixelButton;

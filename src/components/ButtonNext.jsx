@@ -1,3 +1,4 @@
+// src/screens/ButtonNext.jsx
 import React, { useState } from "react";
 import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -5,13 +6,15 @@ import { useNavigation } from "@react-navigation/native";
 
 const PixelButton2 = ({ title, roomCode }) => {
   const [isPressed, setIsPressed] = useState(false);
-  const navigation = useNavigation(); // État pour savoir si le bouton est pressé
+  const navigation = useNavigation();
 
   const handlePress = () => {
-    setIsPressed(true); // Une fois pressé, rester dans l'état pressé
+    setIsPressed(true);
     if (roomCode.trim()) {
       alert(`Joining room with code: ${roomCode}`);
-      navigation.navigate(title);
+      setTimeout(() => {
+        navigation.navigate(title);
+      }, 1000);
     } else {
       alert("Please enter the room code");
     };
@@ -20,7 +23,7 @@ const PixelButton2 = ({ title, roomCode }) => {
 
   setTimeout(() => {
     setIsPressed(false); // Revenir à l'état non pressé
-  }, 500); // Durée de l'animation (500ms ici)
+  }, 250);
 
   // Retarder la navigation pour montrer l'animation avant de changer d'écran
   /*setTimeout(() => {
@@ -64,6 +67,9 @@ const styles = StyleSheet.create({
     color: 'black',
     fontFamily: 'monospace', 
   },
+  buttonImage: {
+    marginTop: '30%',
+  }
 });
 
 export default PixelButton2;
