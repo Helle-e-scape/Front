@@ -1,21 +1,10 @@
 // src/screens/Room.jsx
-import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import PixelButton2 from "../components/ButtonNext";
 
 const Room = () => {
   const [roomCode, setRoomCode] = useState("");
-  const navigation = useNavigation();
-
-  const handleJoinGame = () => {
-    if (roomCode.trim()) {
-      alert(`Joining room with code: ${roomCode}`);
-      navigation.navigate("Waiting Room");
-      // Ici, on pourrait ajouter la logique pour rejoindre la salle
-    } else {
-      alert("Please enter the room code");
-    }
-  };
 
   return (
     <View style={styles.container}>
@@ -26,7 +15,7 @@ const Room = () => {
         value={roomCode}
         onChangeText={setRoomCode}
       />
-      <Button title="Join the game" onPress={handleJoinGame} />
+      <PixelButton2 title={"WaitingRoom"} roomCode={roomCode}/>
     </View>
   );
 };
