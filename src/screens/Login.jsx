@@ -13,7 +13,7 @@ import {
   Text, // Import du composant Text de base au cas où
 } from "react-native";
 import { useUser } from "../context/UserContext";
-import authApi from "../_api/user.api";
+import { authApi } from "../_api/user.api";
 
 const Login = ({ navigation, route }) => {
   const { CustomText, CustomTextInput } = route.params; // Assurez-vous que CustomText et CustomTextInput sont bien des composants
