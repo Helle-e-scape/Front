@@ -29,12 +29,12 @@ export const WebSocketProvider = ({ children }) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify(message));
     } else {
-      console.error("Le WebSocket n'est pas ouvert.");
+      console.log("Le WebSocket n'est pas ouvert.");
     }
   };
 
   return (
-    <WebSocketContext.Provider value={(socket, sendMessage)}>
+    <WebSocketContext.Provider value={{ socket, sendMessage }}>
       {children}
     </WebSocketContext.Provider>
   );
