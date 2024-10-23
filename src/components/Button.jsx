@@ -15,9 +15,24 @@ const PixelButton = ({ title, onPress }) => {
     }, 1000);
   };
 
+  const handlePress2 = () => {
+    setIsPressed(true); 
+  };
+
   setTimeout(() => {
-    setIsPressed(false); // Revenir à l'état non pressé
+    setIsPressed(false); 
   }, 250);
+
+  const handleOnPress = async () => {
+    const result = await onPress(); 
+
+    if (result === true) {  
+      handlePress();  
+    }
+    else {
+      handlePress2();
+    }
+  };
 
   // Retarder la navigation pour montrer l'animation avant de changer d'écran
   /*setTimeout(() => {
@@ -27,6 +42,7 @@ const PixelButton = ({ title, onPress }) => {
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={handleOnPress} disabled={isPressed}/>
         <TouchableOpacity onPress={() => {onPress(), handlePress()}} disabled={isPressed}>
           <Image
             source={
