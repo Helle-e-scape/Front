@@ -4,12 +4,13 @@ import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 
-const PixelButton = ({ title }) => {
+const PixelButton = ({ title, onPress }) => {
   const [isPressed, setIsPressed] = useState(false);
   const navigation = useNavigation();
 
   const handlePress = () => {
     setIsPressed(true); 
+    console.log("Fonctionne");
     setTimeout(() => {
       navigation.navigate(title);
     }, 1000);
@@ -27,7 +28,7 @@ const PixelButton = ({ title }) => {
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={handlePress} disabled={isPressed}>
+        <TouchableOpacity onPress={() => {onPress(), handlePress()}} disabled={isPressed}>
           <Image
             source={
               isPressed

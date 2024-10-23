@@ -17,17 +17,30 @@ import { authApi } from "../_api/user.api";
 
 const Login = ({ navigation }) => {
   const [name, setName] = useState("");
-  const { setUser } = useUser();
+  const { user ,setUser } = useUser();
 
   const handleInputName = (text) => {
     setName(text);
   }
 
-  const handleJoinRoom = () => {
+  const handleJoinRoom = async () => {
+    console.log("User fonctionne");
     if (name.trim()) {
-      navigation.navigate("Room");
+      await authApi.creatUser(name.trim())
+      .then(response => {
+        console.log(response);
+        setUser(response.user); 
+        console.log(user); 
+        navigation.navigate("Room"); 
+
+      })
+      .catch(error => {
+        console.error("Error during registration: ", error);
+        alert("toto");
+      });
     } else {
       alert("Please enter your name");
+
     }
   };
 
@@ -65,13 +78,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: "10%", // Ajuste la position de l'image au 1/3 de l'écran
+    marginTop: "10%",
   },
   bottomSection: {
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    paddingBottom: "10%", // Pousse l'input et le bouton vers le bas
+    paddingBottom: "10%",
   },
   titleImage: {
     width: 200,

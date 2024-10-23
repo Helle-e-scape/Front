@@ -1,8 +1,9 @@
 // src/screens/Room.jsx
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, ImageBackground } from "react-native";
+import { View, Text, TextInput,TouchableOpacity, StyleSheet, ImageBackground } from "react-native";
 import PixelButton2 from "../components/ButtonNext";
 import InputPerso from "../components/Input";
+import { Ionicons } from "@expo/vector-icons";
 
 const Room = () => {
   const [roomCode, setRoomCode] = useState("");
@@ -15,6 +16,12 @@ const Room = () => {
     <ImageBackground 
     source={require("../assets/images/background.jpeg")}
     style={styles.background}>
+      <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons name="arrow-back" size={24} color="white" />
+          </TouchableOpacity>
     <View style={styles.container}>
       <Text style={styles.label}>Room Portal</Text>
       <View style={styles.input}>
@@ -32,7 +39,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-  },
+  },         
   background: {
     flex: 1,
     resizeMode: "cover",
@@ -48,6 +55,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  backButton: {
+    position: "absolute",
+    top: 50, // Ajuster la position de la flèche
+    left: 20,
+    zIndex: 1,
+  },
 });
 
 export default Room;
+  

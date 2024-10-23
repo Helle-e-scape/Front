@@ -2,19 +2,30 @@
 import React, { useState } from "react";
 import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { roomApi } from "../_api/room.api";
+import { useUser } from "../context/UserContext";
 
 
 const PixelButton2 = ({ title, roomCode }) => {
   const [isPressed, setIsPressed] = useState(false);
   const navigation = useNavigation();
+  const {user} = useUser();
 
-  const handlePress = () => {
+  const handlePress = async () => {
     setIsPressed(true);
+    console.log(user);
     if (roomCode.trim()) {
-      alert(`Joining room with code: ${roomCode}`);
-      setTimeout(() => {
-        navigation.navigate(title);
-      }, 1000);
+      await roomApi.userJoinRoom(user._id, roomCode)
+      .then(response => {
+        if (response!= undefined) {
+        setTimeout(() => {
+          navigation.navigate(title);
+        }, 1000)}
+      else {
+        alert("Type an existed room code");
+      };})//.catch( error => {console.log(error)});
+      //alert(`Joining room with code: ${roomCode}`);
+      
     } else {
       alert("Please enter the room code");
     };
