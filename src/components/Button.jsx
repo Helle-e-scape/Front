@@ -43,6 +43,7 @@ const PixelButton = ({ title, onPress }) => {
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={handleOnPress} disabled={isPressed}>
+        <TouchableOpacity onPress={() => {onPress(), handlePress()}} disabled={isPressed}>
           <Image
             source={
               isPressed
