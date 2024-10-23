@@ -4,9 +4,11 @@ import { View, Text, TextInput,TouchableOpacity, StyleSheet, ImageBackground } f
 import PixelButton2 from "../components/ButtonNext";
 import InputPerso from "../components/Input";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const Room = () => {
   const [roomCode, setRoomCode] = useState("");
+  const navigation = useNavigation();
 
   const handleInputRoom = (text) => {
     setRoomCode(text);
