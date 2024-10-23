@@ -31,6 +31,7 @@ async function findById(id) {
 }
 
 async function findByIdRoom(roomId) {
+    console.log(roomId);
     try {
         const response = await axios
             .post(`${END_POINT}/findByIdRoom`, { roomId: roomId });

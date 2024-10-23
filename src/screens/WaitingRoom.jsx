@@ -2,24 +2,30 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, TextInput, Button, StyleSheet, ImageBackground, FlatList, Image, PanResponder} from "react-native";
 import ButtonPerso from "../components/Element";
+import { useUser } from "../context/UserContext";
+import { authApi } from "../_api/user.api";
 
 const WaitingRoom = () => {
-    const [playerList, setPlayerList] = useState([
-        { id: '1', name: 'Safou' },
-        { id: '2', name: 'Ptitbapt' },
-        { id: '3', name: 'RuKasu' },
-        { id: '4', name: 'Maxime' },
-        { id: '5', name: 'Archantrax'},
-        { id: '6', name: 'Hugo'},
-        { id: '7', name: 'Archantrax'},
-        { id: '8', name: 'Hugo'},
-        { id: '9', name: 'Archantrax'},
-        { id: '10', name: 'Hugo'},
-      ]);
+    const [playerList, setPlayerList] = useState([]);
       const flatListRef = useRef(null);
       const scrollOffset = useRef(0);   
       const [isScrolling, setIsScrolling] = useState(true);
       const scrollTimeoutRef = useRef(null);
+      const {user} = useUser();
+
+      const isListed = async () => {
+        console.log("toto");
+        await authApi.findByIdRoom(user.roomId)
+        .then(response => {
+            setPlayerList(response.data);
+        })
+        
+      }
+
+      useEffect(() => {
+        console.log("useEffect called");
+        isListed();
+    }, []);
 
       /*useEffect(() => {
         const startScrolling = () => {
@@ -86,7 +92,7 @@ const WaitingRoom = () => {
             data={playerList}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-              <ButtonPerso title={item.name} style={styles.playerName}></ButtonPerso>
+              <ButtonPerso title={item.pseudo} style={styles.playerName}></ButtonPerso>
             )}
           />
         </View>
