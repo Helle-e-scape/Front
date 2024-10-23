@@ -24,23 +24,17 @@ const Login = ({ navigation }) => {
   }
 
   const handleJoinRoom = async () => {
-    console.log("User fonctionne");
     if (name.trim()) {
       await authApi.creatUser(name.trim())
       .then(response => {
-        console.log(response);
-        setUser(response.user); 
-        console.log(user); 
+        setUser(response.user);  
         navigation.navigate("Room"); 
-
       })
       .catch(error => {
         console.error("Error during registration: ", error);
-        alert("toto");
       });
     } else {
       alert("Please enter your name");
-
     }
   };
 

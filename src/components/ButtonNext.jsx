@@ -13,7 +13,6 @@ const PixelButton2 = ({ title, roomCode }) => {
 
   const handlePress = async () => {
     setIsPressed(true);
-    console.log(user);
     if (roomCode.trim()) {
       await roomApi.userJoinRoom(user._id, roomCode)
       .then(response => {

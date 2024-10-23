@@ -10,7 +10,6 @@ const PixelButton = ({ title, onPress }) => {
 
   const handlePress = () => {
     setIsPressed(true); 
-    console.log("Fonctionne");
     setTimeout(() => {
       navigation.navigate(title);
     }, 1000);
