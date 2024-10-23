@@ -14,7 +14,6 @@ const WaitingRoom = () => {
       const {user} = useUser();
 
       const isListed = async () => {
-        console.log("toto");
         await authApi.findByIdRoom(user.roomId)
         .then(response => {
             setPlayerList(response.data);
@@ -23,7 +22,6 @@ const WaitingRoom = () => {
       }
 
       useEffect(() => {
-        console.log("useEffect called");
         isListed();
     }, []);
 

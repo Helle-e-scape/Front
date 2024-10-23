@@ -20,14 +20,13 @@ const PixelButton = ({ title, onPress }) => {
   };
 
   setTimeout(() => {
-    setIsPressed(false); // Revenir à l'état non pressé
+    setIsPressed(false); 
   }, 250);
 
   const handleOnPress = async () => {
-    const result = await onPress();  // Appelle onPress() et attends son retour
-    console.log(result);
+    const result = await onPress(); 
 
-    if (result === true) {  // Si onPress retourne true, on exécute handlePress
+    if (result === true) {  
       handlePress();  
     }
     else {
