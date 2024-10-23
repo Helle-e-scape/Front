@@ -25,7 +25,6 @@ const PixelButton = ({ title, onPress }) => {
 
   const handleOnPress = async () => {
     const result = await onPress();
-    console.log(result); 
 
     if (result === true) {  
       handlePress();  
