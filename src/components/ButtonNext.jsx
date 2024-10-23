@@ -1,18 +1,34 @@
-// src/screens/Button.jsx
+// src/screens/ButtonNext.jsx
 import React, { useState } from "react";
 import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { roomApi } from "../_api/room.api";
+import { useUser } from "../context/UserContext";
 
 
-const PixelButton = ({ title, onPress }) => {
+const PixelButton2 = ({ title, roomCode }) => {
   const [isPressed, setIsPressed] = useState(false);
   const navigation = useNavigation();
+  const {user} = useUser();
 
-  const handlePress = () => {
-    setIsPressed(true); 
-    setTimeout(() => {
-      navigation.navigate(title);
-    }, 1000);
+  const handlePress = async () => {
+    setIsPressed(true);
+    if (roomCode.trim()) {
+      await roomApi.userJoinRoom(user._id, roomCode)
+      .then(response => {
+        if (response!= undefined) {
+        setTimeout(() => {
+          navigation.navigate(title);
+        }, 1000)}
+      else {
+        alert("Type an existed room code");
+      };})//.catch( error => {console.log(error)});
+      //alert(`Joining room with code: ${roomCode}`);
+      
+    } else {
+      alert("Please enter the room code");
+    };
+    
   };
 
   setTimeout(() => {
@@ -27,12 +43,12 @@ const PixelButton = ({ title, onPress }) => {
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => {onPress(), handlePress()}} disabled={isPressed}>
+        <TouchableOpacity onPress={handlePress} disabled={isPressed}>
           <Image
             source={
               isPressed
-                ? require("../assets/images/JoinRoomButtonClicked.png") // Reste sur cette image après l'appui
-                : require("../assets/images/JoinRoomButton.png")
+                ? require("../assets/images/NextButtonClicked.png") // Reste sur cette image après l'appui
+                : require("../assets/images/NextButton.png")
             }
             style={styles.buttonImage}
           />
@@ -66,4 +82,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default PixelButton;
+export default PixelButton2;
