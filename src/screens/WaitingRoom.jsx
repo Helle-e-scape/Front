@@ -16,7 +16,7 @@ const WaitingRoom = () => {
       const isListed = async () => {
         await authApi.findByIdRoom(user.roomId)
         .then(response => {
-            setPlayerList(response.data);
+            setPlayerList(response.users);
         })
         
       }
