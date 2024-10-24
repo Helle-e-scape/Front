@@ -3,8 +3,6 @@ import React, { useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "../screens/Login";
 import Room from "../screens/Room";
-import { WebSocketProvider } from "../context/WebSocketContext";
-import { UserProvider } from "../context/UserContext";
 import WaitingRoom from "../screens/WaitingRoom";
 import Game from "../screens/Game";
 import Scoreboard from "../screens/Scoreboard";
@@ -15,8 +13,6 @@ const Stack = createStackNavigator();
 
 const AuthNavigationStack = ({ CustomText, CustomTextInput }) => {
   return (
-    <UserProvider>
-    <WebSocketProvider>
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen
         name="Login"
@@ -61,8 +57,6 @@ const AuthNavigationStack = ({ CustomText, CustomTextInput }) => {
         initialParams={{ CustomText, CustomTextInput }}
       />
     </Stack.Navigator>
-    </WebSocketProvider>
-    </UserProvider>
   );
 };
 
