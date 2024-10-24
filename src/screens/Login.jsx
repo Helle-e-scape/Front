@@ -20,9 +20,9 @@ const Login = ({ navigation, route }) => {
   const [name, setName] = useState("");
   const { setUser } = useUser();
 
-  const handleJoinRoom = () => {
+  const handleJoinRoom = async () => {
     if (name.trim()) {
-      authApi.creatUser(name.trim())
+      await authApi.creatUser(name.trim())
       .then(response => {
         setUser(response.user);  
         navigation.navigate("Room");  

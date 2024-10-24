@@ -15,14 +15,23 @@ import { useNavigation } from "@react-navigation/native"; // Pour la navigation
 const Room = ({ navigation, route }) => {
   const { CustomText, CustomTextInput } = route.params; // Récupérer CustomText et CustomTextInput
   const [roomCode, setRoomCode] = useState("");
-  const { user } = useUser();
+  const  { user, setUser }   = useUser();
 
 
   const handleJoinGame = async () => {
     if (roomCode.trim()) {
-      roomApi.userJoinRoom(user.id, roomCode)
-      alert(`Joining room with code: ${roomCode}`);
-      navigation.navigate("WaitingRoom");
+      await roomApi.userJoinRoom(user._id, roomCode)
+        .then(response => {   
+          setUser({ 
+            ...user,
+            room: response.existRoom
+          });          
+          alert(response.message);
+          navigation.navigate("WaitingRoom");
+        })
+        .catch(error => {
+          console.error(`Error for joining room`, error);
+        })
     } else {
       alert("Please enter the room code");
     }
