@@ -9,14 +9,15 @@ import { useUser } from "../context/UserContext";
 const PixelButton2 = ({ title, roomCode }) => {
   const [isPressed, setIsPressed] = useState(false);
   const navigation = useNavigation();
-  const {user} = useUser();
+  const {user, setUser} = useUser();
 
   const handlePress = async () => {
     setIsPressed(true);
     if (roomCode.trim()) {
       await roomApi.userJoinRoom(user._id, roomCode)
       .then(response => {
-        if (response!= undefined) {
+        if (response != undefined) {
+        setUser(response.user);
         setTimeout(() => {
           navigation.navigate(title);
         }, 1000)}
