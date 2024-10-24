@@ -2,49 +2,53 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, TextInput, Button, StyleSheet, ImageBackground, FlatList, Image, PanResponder } from "react-native";
 import ButtonPerso from "../components/Element";
-import { useWebSocket } from "../context/WebSocketContext";
-import { authApi } from "../_api/user.api"
 import { useUser } from "../context/UserContext";
+import { authApi } from "../_api/user.api";
+import { useWebSocket } from "../context/WebSocketContext";
 
-const WaitingRoom = () => {
-  const [playerList, setPlayerList] = useState([]);
-  const { socket } = useWebSocket();
-  const flatListRef = useRef(null);
-  const scrollOffset = useRef(0);
-  const [isScrolling, setIsScrolling] = useState(true);
-  const scrollTimeoutRef = useRef(null);
-  const { user } = useUser();
+useEffect(() => {
+  const fetchPlayerList = async () => {
+    try {
+      const response = await authApi.findByIdRoom(user.room._id);
+      setPlayerList(response.users); // Remplir la liste avec les utilisateurs récupérés via l'API
+    } catch (error) {
+      console.error('Error fetching players:', error);
+    }
+  };
+  fetchPlayerList();
+}, []);
 
-  useEffect(() => {
-    const fetchPlayerList = async () => {
-      try {
-        const response = await authApi.findByIdRoom(user.room._id);
-        setPlayerList(response.users); // Remplir la liste avec les utilisateurs récupérés via l'API
-      } catch (error) {
-        console.error('Error fetching players:', error);
-      }
-    };
-    fetchPlayerList();
-  }, []);
+useEffect(() => {
+  if (socket) {
+    socket.onmessage = (message) => {
+      const data = JSON.parse(message.data); // Parse le message reçu
 
-  useEffect(() => {
-    if (socket) {
-      socket.onmessage = (message) => {
-        const data = JSON.parse(message.data); // Parse le message reçu
-
-        if (data.type === "join_room") {
-                
-            if (user._id != data.user._id && data.room._id == user.room._id)  {        
+      if (data.type === "join_room") {
               
-            const updateUserList = (newUser) => {
-              console.log("new user dans la methode : ", newUser);
-              
-              setPlayerList((prevList) => [...prevList, newUser]); // Ajoute le nouvel utilisateur à la liste existante
-            };
-
-            updateUserList(data.user);
-            console.log("liste des user : ", playerList);
+          if (user._id != data.user._id && data.room._id == user.room._id)  {        
+            
+          const updateUserList = (newUser) => {
+            console.log("new user dans la methode : ", newUser);
+            
+            setPlayerList((prevList) => [...prevList, newUser]); // Ajoute le nouvel utilisateur à la liste existante
           };
+
+          updateUserList(data.user);
+          console.log("liste des user : ", playerList);
+        };
+      };
+    };
+  };
+}, [socket]);
+
+      /*useEffect(() => {
+        const startScrolling = () => {
+            scrollTimeoutRef.current = setInterval(() => {
+                if (isScrolling && flatListRef.current) {
+                    scrollOffset.current += 1; 
+                    flatListRef.current.scrollToOffset({ offset: scrollOffset.current, animated: true });
+                }
+            }, 100);  
         };
       };
     };
@@ -70,33 +74,17 @@ const WaitingRoom = () => {
     };
   }, [isScrolling]);
 
-  const stopScrolling = () => {
-    setIsScrolling(false);
-    if (scrollTimeoutRef.current) {
-      clearInterval(scrollTimeoutRef.current);
-    }
-  };
-
-  const restartScrolling = () => {
-    if (scrollTimeoutRef.current) {
-      clearTimeout(scrollTimeoutRef.current);
-    }
-    scrollTimeoutRef.current = setTimeout(() => {
-      setIsScrolling(true);
-    }, 10000);
-  };
-
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderGrant: () => {
-        stopScrolling();
-      },
-      onPanResponderRelease: () => {
-        restartScrolling();
-      },
-    })
-  ).current;
+    const panResponder = useRef(
+        PanResponder.create({
+            onStartShouldSetPanResponder: () => true,  
+            onPanResponderGrant: () => {
+                stopScrolling();
+            },
+            onPanResponderRelease: () => {
+                restartScrolling();  
+            },
+        })
+    ).current;*/
 
 
   return (
@@ -109,6 +97,16 @@ const WaitingRoom = () => {
             source={require("../assets/images/title.png")}
             style={styles.titleImage}
           />
+          </View>
+          <Text  style={styles.title}>Players List</Text>
+          <FlatList style={styles.list}
+            ref={flatListRef}
+            data={playerList}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <ButtonPerso title={item.pseudo} style={styles.playerName}></ButtonPerso>
+            )}
+          />
         </View>
         <Text style={styles.title}>Players List</Text>
         <FlatList style={styles.list}
@@ -119,10 +117,8 @@ const WaitingRoom = () => {
             <ButtonPerso title={item.name} style={styles.playerName}></ButtonPerso>
           )}
         />
-      </View>
     </ImageBackground>
   );
-};
 
 const styles = StyleSheet.create({
   background: {

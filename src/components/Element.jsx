@@ -1,4 +1,4 @@
-// src/screens/Button.jsx
+// src/screens/Element.jsx
 import React, { useRef } from "react";
 import { Animated, View, StyleSheet, PanResponder, Text} from "react-native";
 
@@ -26,7 +26,7 @@ const ButtonPerso = ({title}) => {
         }}
         {...panResponder.panHandlers}>
           <View style={styles.box}>
-        <Text>{title}</Text>
+        <Text style={{textAlign: 'center', fontFamily: 'Minecraft'}}>{title}</Text>
         </View>
       </Animated.View>
     </View>
@@ -45,13 +45,15 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
     },
     box: {
-      height: 50,
-      width: 150,
-      backgroundColor: 'blue',
-      borderRadius: 5,
-      marginTop: 50,
-      textAlign: "center",
-      alignItems: "center",
+      borderWidth: 5, 
+      borderColor: 'black',
+      borderRadius: 10, 
+      padding: 5,
+      backgroundColor: '#fff', 
+      width: 350,
+      height: 65,
+      justifyContent: 'center',
+      marginTop: '10%',
     },
   });
 

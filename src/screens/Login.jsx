@@ -1,6 +1,7 @@
 // src/screens/Login.jsx
 import React, { useState } from "react";
 import PixelButton from "../components/Button";
+import InputPerso from "../components/Input";
 import {
   View,
   TextInput,
@@ -8,36 +9,37 @@ import {
   Image,
   ImageBackground,
   TouchableOpacity,
-  Keyboard,
-  TouchableWithoutFeedback,
-  Text, // Import du composant Text de base au cas où
+  Text,
+  Button,
 } from "react-native";
 import { useUser } from "../context/UserContext";
 import { authApi } from "../_api/user.api";
 
-const Login = ({ navigation, route }) => {
-  const { CustomText, CustomTextInput } = route.params; // Assurez-vous que CustomText et CustomTextInput sont bien des composants
+const Login = ({ navigation }) => {
   const [name, setName] = useState("");
-  const { setUser } = useUser();
+  const { user ,setUser } = useUser();
+
+  const handleInputName = (text) => {
+    setName(text);
+  }
 
   const handleJoinRoom = async () => {
     if (name.trim()) {
-      await authApi.creatUser(name.trim())
-      .then(response => {
-        setUser(response.user);  
-        navigation.navigate("Room");  
-      })
-      .catch(error => {
+      try {
+        const response = await authApi.creatUser(name.trim());
+        setUser(response.user);
+        return true;
+      } catch (error) {
         console.error("Error during registration: ", error);
-      });
+        return false;
+      }
     } else {
       alert("Please enter your name");
+      return false;
     }
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={{ flex: 1 }}>
     <ImageBackground
       source={require("../assets/images/background.jpeg")}
       style={styles.background}
@@ -50,33 +52,15 @@ const Login = ({ navigation, route }) => {
           />
         </View>
         <View style={styles.bottomSection}>
-              <CustomTextInput
-            style={styles.input}
-            placeholder="Enter your name"
-            placeholderTextColor="#888"
-            value={name}
-                returnKeyType="go"
-            onChangeText={setName}
-                onSubmitEditing={handleJoinRoom}
-          />
-              <TouchableOpacity
-                style={styles.joinButton}
-                onPress={handleJoinRoom}
-              >
-                <CustomText style={styles.joinButtonText}>
-                  {/* Assurez-vous que tout texte est bien rendu dans un composant Text */}
-                  Join a room
-                </CustomText>
-              </TouchableOpacity>
+          <InputPerso placeholder={"Enter your name"} onInputChange={handleInputName} />
+          <PixelButton title={"Room"} onPress={handleJoinRoom}/>
         </View>
       </View>
     </ImageBackground>
-      </View>
-    </TouchableWithoutFeedback>
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   background: {
     flex: 1,
     resizeMode: "cover",
@@ -107,10 +91,11 @@ const styles = {
     height: 40,
     borderColor: "#ccc",
     borderWidth: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#fff", // Fond blanc pour l'input
     padding: 10,
     marginBottom: 20,
     borderRadius: 5,
+    fontFamily: "Minecraft",
   },
   joinButton: {
     marginTop: 20,
@@ -124,6 +109,6 @@ const styles = {
     color: "#fff",
     fontSize: 16,
   },
-};
+});
 
 export default Login;
