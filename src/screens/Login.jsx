@@ -25,16 +25,17 @@ const Login = ({ navigation }) => {
 
   const handleJoinRoom = async () => {
     if (name.trim()) {
-      await authApi.creatUser(name.trim())
-      .then(response => {
-        setUser(response.user);  
-        navigation.navigate("Room"); 
-      })
-      .catch(error => {
+      try {
+        const response = await authApi.creatUser(name.trim());
+        setUser(response.user);
+        return true;
+      } catch (error) {
         console.error("Error during registration: ", error);
-      });
+        return false;
+      }
     } else {
       alert("Please enter your name");
+      return false;
     }
   };
 

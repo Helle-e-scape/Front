@@ -18,16 +18,14 @@ async function creatRoom(name) {
   }
 }
 
-async function userJoinRoom(idUser, roomId) {
-  try {
-    const response = await axios.put(`${END_POINT}/userJoin`, {
-      _id: idUser,
-      roomCode: roomId,
-    });
-    return response.data;
-  } catch (error) {
-    return console.error(error);
-  }
+async function userJoinRoom(idUser, roomCode) {
+    try {
+        const response = await axios
+            .put(`${END_POINT}/userJoin`, { _id: idUser, roomCode: roomCode });
+        return response.data;
+    } catch (error) {
+        return console.error(error);
+    }
 }
 
 function deleteRoom(id) {
