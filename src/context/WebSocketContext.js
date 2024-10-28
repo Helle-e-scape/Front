@@ -17,7 +17,7 @@ export const WebSocketProvider = ({ children }) => {
       console.log("Message reçu:", data);
       switch (data.type) {
         case "placeTrap":
-          console.log("Place trap", data);
+          console.log("Place trap", data.trap);
           setWebsocketTraps((traps) => [...traps, data]);
           break;
         default:

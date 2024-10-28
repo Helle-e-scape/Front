@@ -21,9 +21,7 @@ useEffect(() => {
   const fetchPlayerList = async () => {
     try {
       const response = await authApi.findByIdRoom(user.roomId);
-
       setPlayerList(response.users); // Remplir la liste avec les utilisateurs récupérés via l'API
-      console.log("liste des utilisateurs", playerList);
     } catch (error) {
       console.error('Error fetching players:', error);
     }
@@ -36,7 +34,6 @@ setTimeout(() => {
 }, 5000);
 
 useEffect(() => {
-  console.log(playerList);
   if (socket) {
     socket.onmessage = (message) => {
       const data = JSON.parse(message.data); // Parse le message reçu
@@ -50,9 +47,8 @@ useEffect(() => {
             
             setPlayerList((prevList) => [...prevList, newUser]); // Ajoute le nouvel utilisateur à la liste existante
           };
-
+            
           updateUserList(data.user);
-          console.log("liste des user : ", playerList);
         };
       };
     };
