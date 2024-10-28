@@ -25,12 +25,12 @@ const Trap = ({ route }) => {
 
         const allTrapsData = response.trap || [];
 
-        console.log(allTrapsData)
+        console.log(allTrapsData);
         
         setAllTraps(allTrapsData);
         
         const userTraps = allTraps.filter(trap => trap.userId === user._id);
-        console.log(user._id)
+        console.log(user._id);
         setTraps(userTraps);
         console.log(userTraps);
       } catch (error) {
