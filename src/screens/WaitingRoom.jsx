@@ -5,6 +5,7 @@ import ButtonPerso from "../components/Element";
 import { useUser } from "../context/UserContext";
 import { authApi } from "../_api/user.api";
 import { useWebSocket } from "../context/WebSocketContext";
+import { useNavigation } from "@react-navigation/native";
 
 const WaitingRoom = () => {
   const [playerList, setPlayerList] = useState([]);
@@ -14,6 +15,7 @@ const WaitingRoom = () => {
   const [isScrolling, setIsScrolling] = useState(true);
   const scrollTimeoutRef = useRef(null);
   const { user } = useUser();
+  const navigation = useNavigation();
 
 useEffect(() => {
   const fetchPlayerList = async () => {
@@ -26,6 +28,10 @@ useEffect(() => {
   };
   fetchPlayerList();
 }, []);
+
+setTimeout(() => {
+  navigation.navigate("Grid");
+}, 5000);
 
 useEffect(() => {
   if (socket) {
