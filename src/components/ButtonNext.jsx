@@ -16,12 +16,11 @@ const PixelButton2 = ({ title, roomCode }) => {
     if (roomCode.trim()) {
       await roomApi.userJoinRoom(user._id, roomCode)
       .then(response => {
+        if (response != undefined) {
         setUser({ 
           ...user,
           room: response.existRoom
         });     
-        if (response != undefined) {
-        setUser(response.user);
         setTimeout(() => {
           navigation.navigate(title);
         }, 1000)}

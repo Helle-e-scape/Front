@@ -5,6 +5,7 @@ const WebSocketContext = createContext(null);
 
 export const WebSocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
+  const [websocketTraps, setWebsocketTraps] = useState([]);
   useEffect(() => {
     const socketInstance = new WebSocket(WEBSOCKET_URL);
 
@@ -14,6 +15,14 @@ export const WebSocketProvider = ({ children }) => {
     socketInstance.onmessage = (message) => {
       const data = JSON.parse(message.data);
       console.log("Message reçu:", data);
+      switch (data.type) {
+        case "placeTrap":
+          console.log("Place trap", data.trap);
+          setWebsocketTraps((traps) => [...traps, data]);
+          break;
+        default:
+          break;
+      }
     };
 
     setSocket(socketInstance);
@@ -34,7 +43,9 @@ export const WebSocketProvider = ({ children }) => {
   };
 
   return (
-    <WebSocketContext.Provider value={{ socket, sendMessage }}>
+    <WebSocketContext.Provider
+      value={{ socket, sendMessage, websocketTraps, setWebsocketTraps }}
+    >
       {children}
     </WebSocketContext.Provider>
   );

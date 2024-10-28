@@ -1,22 +1,21 @@
-import axios from 'axios';
-import {BACKEND_URL} from "@env";
+import axios from "axios";
+import { BACKEND_URL } from "@env";
 
-const END_POINT = BACKEND_URL + '/room';
+const END_POINT = BACKEND_URL + "/room";
 
 export const roomApi = {
-    creatRoom,
-    userJoinRoom,
-    deleteRoom,
+  creatRoom,
+  userJoinRoom,
+  deleteRoom,
 };
 
 async function creatRoom(name) {
   try {
-        const response = await axios
-            .post(`${END_POINT}/create`, { name: name });
-        return response.data;
-    } catch (error) {
-        return console.error(error);
-    }
+    const response = await axios.post(`${END_POINT}/create`, { name: name });
+    return response.data;
+  } catch (error) {
+    return console.error(error);
+  }
 }
 
 async function userJoinRoom(idUser, roomCode) {
@@ -30,8 +29,8 @@ async function userJoinRoom(idUser, roomCode) {
 }
 
 function deleteRoom(id) {
-    return axiosroomId
+  return axiosroomId
     .delete(`${END_POINT}/delete`, { _id: id })
-    .then(response => response.data)
+    .then((response) => response.data)
     .catch((error) => console.error(error));
 }
