@@ -22,7 +22,7 @@ async function createTrap(location, userId, nameTrap, roomId) {
 async function findAllByIdRoom(idRoom) {
     try {
         const response = await axios
-            .post(`${END_POINT}/findAllByIdRoom`, idRoom);
+            .post(`${END_POINT}/findAllByIdRoom`, {_id :idRoom});
         return response.data;
     } catch (error) {
         return console.error(error);

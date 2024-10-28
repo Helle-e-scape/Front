@@ -1,29 +1,57 @@
 // src/screens/WaitingRoom.jsx
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, TextInput, Button, StyleSheet, ImageBackground, FlatList, Image, PanResponder} from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, ImageBackground, FlatList, Image, PanResponder } from "react-native";
 import ButtonPerso from "../components/Element";
 import { useUser } from "../context/UserContext";
 import { authApi } from "../_api/user.api";
+import { useWebSocket } from "../context/WebSocketContext";
 
 const WaitingRoom = () => {
-    const [playerList, setPlayerList] = useState([]);
-      const flatListRef = useRef(null);
-      const scrollOffset = useRef(0);   
-      const [isScrolling, setIsScrolling] = useState(true);
-      const scrollTimeoutRef = useRef(null);
-      const {user} = useUser();
+  const [playerList, setPlayerList] = useState([]);
+  const { socket } = useWebSocket();
+  const flatListRef = useRef(null);
+  const scrollOffset = useRef(0);
+  const [isScrolling, setIsScrolling] = useState(true);
+  const scrollTimeoutRef = useRef(null);
+  const { user } = useUser();
 
-      const isListed = async () => {
-        await authApi.findByIdRoom(user.roomId)
-        .then(response => {
-            setPlayerList(response.users);
-        })
-        
-      }
+useEffect(() => {
+  const fetchPlayerList = async () => {
+    try {
+      const response = await authApi.findByIdRoom(user.roomId);
 
-      useEffect(() => {
-        isListed();
-    }, []);
+      setPlayerList(response.users); // Remplir la liste avec les utilisateurs récupérés via l'API
+      console.log("liste des utilisateurs", playerList);
+    } catch (error) {
+      console.error('Error fetching players:', error);
+    }
+  };
+  fetchPlayerList();
+}, []);
+
+useEffect(() => {
+  console.log(playerList);
+  if (socket) {
+    socket.onmessage = (message) => {
+      const data = JSON.parse(message.data); // Parse le message reçu
+
+      if (data.type === "join_room") {
+              
+          if (user._id != data.user._id && data.room._id == user.room._id)  {        
+            
+          const updateUserList = (newUser) => {
+            console.log("new user dans la methode : ", newUser);
+            
+            setPlayerList((prevList) => [...prevList, newUser]); // Ajoute le nouvel utilisateur à la liste existante
+          };
+
+          updateUserList(data.user);
+          console.log("liste des user : ", playerList);
+        };
+      };
+    };
+  };
+}, [socket]);
 
       /*useEffect(() => {
         const startScrolling = () => {
@@ -34,31 +62,29 @@ const WaitingRoom = () => {
                 }
             }, 100);  
         };
+      };
+    };
+  }, [socket]);
 
-        startScrolling(); 
 
-        return () => {
-            if (scrollTimeoutRef.current) {
-                clearInterval(scrollTimeoutRef.current);  
-            }
-        };
-    }, [isScrolling]);
-
-    const stopScrolling = () => {
-        setIsScrolling(false);
-        if (scrollTimeoutRef.current) {
-            clearInterval(scrollTimeoutRef.current); 
+  useEffect(() => {
+    const startScrolling = () => {
+      scrollTimeoutRef.current = setInterval(() => {
+        if (isScrolling && flatListRef.current) {
+          scrollOffset.current += 1;
+          flatListRef.current.scrollToOffset({ offset: scrollOffset.current, animated: true });
         }
+      }, 100);
     };
 
-    const restartScrolling = () => {
-        if (scrollTimeoutRef.current) {
-            clearTimeout(scrollTimeoutRef.current);
-        }
-        scrollTimeoutRef.current = setTimeout(() => {
-            setIsScrolling(true);  
-        }, 10000);  
+    startScrolling();
+
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearInterval(scrollTimeoutRef.current);
+      }
     };
+  }, [isScrolling]);
 
     const panResponder = useRef(
         PanResponder.create({
@@ -73,11 +99,11 @@ const WaitingRoom = () => {
     ).current;*/
 
 
-    return (
-        <ImageBackground
-        source={require("../assets/images/background.jpeg")}
-        style={styles.background}>
-        <View style={styles.container}>
+  return (
+    <ImageBackground
+      source={require("../assets/images/background.jpeg")}
+      style={styles.background}>
+      <View style={styles.container}>
         <View style={styles.topSection}>
           <Image
             source={require("../assets/images/title.png")}
@@ -94,43 +120,43 @@ const WaitingRoom = () => {
             )}
           />
         </View>
-        </ImageBackground>
-      );
-    };
+    </ImageBackground>
+  );
+}
 
-    const styles = StyleSheet.create({
-        background: {
-          flex: 1,
-          resizeMode: "cover",
-        },
-        container: {
-            flex: 1,
-            justifyContent: "space-between",
-          },
-        list: {
-            flex: 1,
-            marginBottom: "20%",
-        },
-        title: {
-            textAlign: "center",
-            color: "white",
-            marginBottom: "10%",
-          },
-        topSection: {
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: "10%",
-          },
-        titleImage: {
-            width: 200,
-            height: 100,
-            resizeMode: "contain",
-          },
-        playerName: {
-            fontSize: 15,
-            color: "white",
-        }  
-    })
+const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    resizeMode: "cover",
+  },
+  container: {
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  list: {
+    flex: 1,
+    marginBottom: "20%",
+  },
+  title: {
+    textAlign: "center",
+    color: "white",
+    marginBottom: "10%",
+  },
+  topSection: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "10%",
+  },
+  titleImage: {
+    width: 200,
+    height: 100,
+    resizeMode: "contain",
+  },
+  playerName: {
+    fontSize: 15,
+    color: "white",
+  }
+})
 
 export default WaitingRoom;
