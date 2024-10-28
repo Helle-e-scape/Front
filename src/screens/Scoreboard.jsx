@@ -86,6 +86,10 @@ const Scoreboard = ({ route }) => {
     itemVisiblePercentThreshold: 50, // 50% de l'élément doit être visible pour le considérer visible
   };
 
+  setTimeout(() => {
+    navigation.navigate("Grid");
+  }, 1000);
+
   return (
     <ImageBackground
       source={require("../assets/images/background.jpeg")}

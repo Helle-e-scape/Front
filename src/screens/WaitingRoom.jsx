@@ -14,10 +14,11 @@ const WaitingRoom = () => {
   const [isScrolling, setIsScrolling] = useState(true);
   const scrollTimeoutRef = useRef(null);
   const { user } = useUser();
+
 useEffect(() => {
   const fetchPlayerList = async () => {
     try {
-      const response = await authApi.findByIdRoom(user.room._id);
+      const response = await authApi.findByIdRoom(user.roomId);
       setPlayerList(response.users); // Remplir la liste avec les utilisateurs récupérés via l'API
     } catch (error) {
       console.error('Error fetching players:', error);
@@ -40,9 +41,8 @@ useEffect(() => {
             
             setPlayerList((prevList) => [...prevList, newUser]); // Ajoute le nouvel utilisateur à la liste existante
           };
-
+            
           updateUserList(data.user);
-          console.log("liste des user : ", playerList);
         };
       };
     };
@@ -116,15 +116,6 @@ useEffect(() => {
             )}
           />
         </View>
-        <Text style={styles.title}>Players List</Text>
-        <FlatList style={styles.list}
-          ref={flatListRef}
-          data={playerList}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <ButtonPerso title={item.name} style={styles.playerName}></ButtonPerso>
-          )}
-        />
     </ImageBackground>
   );
 }

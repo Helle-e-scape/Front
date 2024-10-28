@@ -3,10 +3,13 @@ import { View, TouchableOpacity, StyleSheet, ImageBackground, Dimensions, Modal,
 import { useWebSocket } from '../context/WebSocketContext';
 import { trapUserApi } from "../_api/trapUser.api";
 import { useUser } from '../context/UserContext';
+import { useNavigation } from '@react-navigation/native';
+
 
 const GridScreen = () => {
-  const { sendMessage, websocketTraps, setWebsocketTraps } = useWebSocket();
+  const { sendMessage, websocketTraps =  [], setWebsocketTraps } = useWebSocket();
   const { user } = useUser();
+  const navigation = useNavigation();
   
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
@@ -33,6 +36,10 @@ const GridScreen = () => {
       });
     }
   }, [websocketTraps]);
+
+  setTimeout(() => {
+    navigation.navigate("Trap");
+  }, 5000);
 
   const sendCoordinates = (x, y) => {
     const data = { type: 'placeTrap', data: { x, y }, nameTrap: 'Trap1', roomId: user.roomId, userId: user._id };

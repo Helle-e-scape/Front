@@ -1,5 +1,5 @@
 // src/screens/Room.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput,TouchableOpacity, StyleSheet, ImageBackground } from "react-native";
 import PixelButton2 from "../components/ButtonNext";
 import InputPerso from "../components/Input";
@@ -9,6 +9,14 @@ import { useNavigation } from "@react-navigation/native";
 const Room = () => {
   const [roomCode, setRoomCode] = useState("");
   const navigation = useNavigation();
+
+  useEffect(() => {
+    // Désactiver le geste de retour et masquer le bouton de retour
+    navigation.setOptions({
+      gestureEnabled: false, // Désactiver le swipe-back
+      headerLeft: () => null, // Supprimer le bouton de retour
+    });
+  }, [navigation]);
 
   const handleInputRoom = (text) => {
     setRoomCode(text);
@@ -22,7 +30,6 @@ const Room = () => {
             style={styles.backButton}
             onPress={() => navigation.goBack()}
           >
-            <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
     <View style={styles.container}>
       <Text style={styles.label}>Room Portal</Text>

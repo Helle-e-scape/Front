@@ -1,14 +1,18 @@
 // src/screens/Button.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useUser } from "../context/UserContext";
 
 
 const PixelButton = ({ title, onPress }) => {
   const [isPressed, setIsPressed] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
   const navigation = useNavigation();
+  const {user} = useUser();
 
   const handlePress = () => {
+    setIsDisabled(true);
     setIsPressed(true); 
     setTimeout(() => {
       navigation.navigate(title);
@@ -24,6 +28,9 @@ const PixelButton = ({ title, onPress }) => {
   }, 250);
 
   const handleOnPress = async () => {
+    if (isDisabled) return;
+    setIsDisabled(true);
+
     const result = await onPress();
 
     if (result === true) {  
@@ -34,6 +41,12 @@ const PixelButton = ({ title, onPress }) => {
     }
   };
 
+useEffect(() => {
+  if (user) {
+    navigation.navigate(title);
+  }
+});
+
   // Retarder la navigation pour montrer l'animation avant de changer d'écran
   /*setTimeout(() => {
     navigation.navigate(title); // Naviguer après le délai
@@ -42,7 +55,7 @@ const PixelButton = ({ title, onPress }) => {
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={handleOnPress} disabled={isPressed}>
+        <TouchableOpacity onPress={handleOnPress} disabled={ isPressed || isDisabled}>
           <Image
             source={
               isPressed
