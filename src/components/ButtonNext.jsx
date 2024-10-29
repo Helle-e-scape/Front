@@ -21,8 +21,10 @@ const PixelButton2 = ({ title, roomCode }) => {
         if (response != undefined) {
         setUser({ 
           ...user,
-          room: response.existRoom
-        });
+
+          room: response.room
+        });     
+          
         setTimeout(() => {
           navigation.navigate(title);
         }, 1000)}
