@@ -6,6 +6,8 @@ const WebSocketContext = createContext(null);
 export const WebSocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [websocketTraps, setWebsocketTraps] = useState([]);
+  const [isPlacingTrapTurn, setIsPlacingTrapTurn] = useState(false);
+  const [level, setLevel] = useState(1);
   useEffect(() => {
     const socketInstance = new WebSocket(WEBSOCKET_URL);
 
@@ -19,6 +21,16 @@ export const WebSocketProvider = ({ children }) => {
         case "placeTrap":
           console.log("Place trap", data.trap);
           setWebsocketTraps((traps) => [...traps, data]);
+          break;
+        case "gameState":
+          if (data.state == "unityplaying") {
+            setIsPlacingTrapTurn(false);
+          } else if (data.state == "placingtrapturn") {
+            setIsPlacingTrapTurn(true);
+          }
+          break;
+        case "level":
+          setLevel(data.level);
           break;
         default:
           break;
@@ -44,7 +56,14 @@ export const WebSocketProvider = ({ children }) => {
 
   return (
     <WebSocketContext.Provider
-      value={{ socket, sendMessage, websocketTraps, setWebsocketTraps }}
+      value={{
+        socket,
+        sendMessage,
+        websocketTraps,
+        setWebsocketTraps,
+        isPlacingTrapTurn,
+        level,
+      }}
     >
       {children}
     </WebSocketContext.Provider>

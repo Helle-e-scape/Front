@@ -5,7 +5,7 @@ import { trapUserApi } from "../_api/trapUser.api";
 import { useUser } from '../context/UserContext';
 
 const GridScreen = () => {
-  const { sendMessage, websocketTraps, setWebsocketTraps } = useWebSocket();
+  const { sendMessage, websocketTraps , setWebsocketTraps, isPlacingTrapTurn, level } = useWebSocket();
   const { user } = useUser();
   
   const windowWidth = Dimensions.get('window').width;
@@ -24,6 +24,14 @@ const GridScreen = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [cellToConfirm, setCellToConfirm] = useState({ x: null, y: null });
 
+  const levelImage = {
+    1: require('../assets/images/Level1.jpg'),
+    2.1: require('../assets/images/Level2-1.jpg'),
+    2.2: require('../assets/images/Level2-2.jpg'),
+    3.1: require('../assets/images/Level3-1.jpg'),
+    3.2: require('../assets/images/Level3-2.jpg'),
+  }
+
   useEffect(() => {
     if (websocketTraps.length === 0) {
       trapUserApi.findAllByIdRoom(user.roomId).then(response => {
@@ -32,14 +40,16 @@ const GridScreen = () => {
         console.log("Error during fetching traps: ", error);
       });
     }
-  }, [websocketTraps]);
+  }, [websocketTraps, isPlacingTrapTurn, level]);
 
   const sendCoordinates = (x, y) => {
-    const data = { type: 'placeTrap', data: { x, y }, nameTrap: 'Trap1', roomId: user.roomId, userId: user._id };
+    const data = { type: 'placeTrap', data: { x, y }, trapType: 'Spike', roomId: user.roomId, userId: user._id };
     sendMessage(data);
   };
 
   const onCellPress = (x, y) => {
+    console.log('Cell pressed:', isPlacingTrapTurn);
+    if(!isPlacingTrapTurn) return;
     setCellToConfirm({ x, y });
     setModalVisible(true);
   };
@@ -90,7 +100,7 @@ const GridScreen = () => {
   };
 
   return (
-    <ImageBackground style={styles.container} source={require("../assets/images/Level3-1.jpg")} resizeMode="stretch">
+    <ImageBackground style={styles.container} source={levelImage[level]} resizeMode="stretch">
       <View style={styles.gridContainer}>{renderGrid()}</View>
 
       <Modal

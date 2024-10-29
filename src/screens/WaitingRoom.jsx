@@ -6,6 +6,14 @@ import { useUser } from "../context/UserContext";
 import { authApi } from "../_api/user.api";
 import { useWebSocket } from "../context/WebSocketContext";
 
+const WaitingRoom = () => {
+  const [playerList, setPlayerList] = useState([]);
+  const { socket } = useWebSocket();
+  const flatListRef = useRef(null);
+  const scrollOffset = useRef(0);
+  const [isScrolling, setIsScrolling] = useState(true);
+  const scrollTimeoutRef = useRef(null);
+  const { user } = useUser();
 useEffect(() => {
   const fetchPlayerList = async () => {
     try {
@@ -119,6 +127,7 @@ useEffect(() => {
         />
     </ImageBackground>
   );
+}
 
 const styles = StyleSheet.create({
   background: {
