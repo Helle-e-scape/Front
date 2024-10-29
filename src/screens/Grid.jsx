@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 const GridScreen = () => {
-  const { sendMessage, websocketTraps =  [], setWebsocketTraps } = useWebSocket();
+  const { sendMessage, websocketTraps = [] , setWebsocketTraps, isPlacingTrapTurn, level } = useWebSocket();
   const { user } = useUser();
   const navigation = useNavigation();
   
@@ -28,6 +28,14 @@ const GridScreen = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [cellToConfirm, setCellToConfirm] = useState({ x: null, y: null });
 
+  const levelImage = {
+    1: require('../assets/images/Level1.jpg'),
+    2.1: require('../assets/images/Level2-1.jpg'),
+    2.2: require('../assets/images/Level2-2.jpg'),
+    3.1: require('../assets/images/Level3-1.jpg'),
+    3.2: require('../assets/images/Level3-2.jpg'),
+  }
+
   useEffect(() => {
     if (websocketTraps.length === 0) {
       trapUserApi.findAllByIdRoom(user.roomId).then(response => {
@@ -36,18 +44,20 @@ const GridScreen = () => {
         console.log("Error during fetching traps: ", error);
       });
     }
-  }, [websocketTraps]);
+  }, [websocketTraps, isPlacingTrapTurn, level]);
 
   /*setTimeout(() => {
     navigation.navigate("Trap");
   }, 5000);*/
 
   const sendCoordinates = (x, y) => {
-    const data = { type: 'placeTrap', data: { x, y }, nameTrap: 'Trap1', roomId: user.roomId, userId: user._id };
+    const data = { type: 'placeTrap', data: { x, y }, trapType: 'Spike', roomId: user.roomId, userId: user._id, level: level };
     sendMessage(data);
   };
 
   const onCellPress = (x, y) => {
+    console.log('Cell pressed:', isPlacingTrapTurn);
+    if(!isPlacingTrapTurn) return;
     if (limit > 0) {
     setCellToConfirm({ x, y });
     setModalVisible(true);
@@ -59,7 +69,6 @@ const GridScreen = () => {
 
   const confirmTrapPlacement = () => {
     if (limit > 0) {
-      console.log("avant methode", limit);
     sendCoordinates(cellToConfirm.x, cellToConfirm.y);
     setSelectedCell(cellToConfirm);
     setModalVisible(false);
@@ -67,8 +76,10 @@ const GridScreen = () => {
   };
   };
 
+  const isTrapVisible = (trap) => trap.level === level;
+
   const isTrap = (x, y) => {
-    return websocketTraps.some(trap => trap.location.x === x && trap.location.y === y);
+    return websocketTraps.some(trap => trap.location.x === x && trap.location.y === y && isTrapVisible(trap));
   };
 
   const renderGrid = () => {
@@ -107,7 +118,7 @@ const GridScreen = () => {
   };
 
   return (
-    <ImageBackground style={styles.container} source={require("../assets/images/Level3-1.jpg")} resizeMode="stretch">
+    <ImageBackground style={styles.container} source={levelImage[level]} resizeMode="stretch">
       <View style={styles.gridContainer}>{renderGrid()}</View>
 
       <Modal
