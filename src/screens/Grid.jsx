@@ -43,7 +43,7 @@ const GridScreen = () => {
   }, [websocketTraps, isPlacingTrapTurn, level]);
 
   const sendCoordinates = (x, y) => {
-    const data = { type: 'placeTrap', data: { x, y }, trapType: 'Spike', roomId: user.roomId, userId: user._id };
+    const data = { type: 'placeTrap', data: { x, y }, trapType: 'Spike', roomId: user.roomId, userId: user._id, level: level };
     sendMessage(data);
   };
 
@@ -60,8 +60,10 @@ const GridScreen = () => {
     setModalVisible(false);
   };
 
+  const isTrapVisible = (trap) => trap.level === level;
+
   const isTrap = (x, y) => {
-    return websocketTraps.some(trap => trap.location.x === x && trap.location.y === y);
+    return websocketTraps.some(trap => trap.location.x === x && trap.location.y === y && isTrapVisible(trap));
   };
 
   const renderGrid = () => {
