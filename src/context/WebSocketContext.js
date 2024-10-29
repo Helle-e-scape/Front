@@ -8,6 +8,7 @@ export const WebSocketProvider = ({ children }) => {
   const [websocketTraps, setWebsocketTraps] = useState([]);
   const [isPlacingTrapTurn, setIsPlacingTrapTurn] = useState(false);
   const [level, setLevel] = useState(1);
+  const [canNavigate, setCanNavigate] = useState(false);
   useEffect(() => {
     const socketInstance = new WebSocket(WEBSOCKET_URL);
 
@@ -26,6 +27,7 @@ export const WebSocketProvider = ({ children }) => {
           if (data.state == "unityplaying") {
             setIsPlacingTrapTurn(false);
           } else if (data.state == "placingtrapturn") {
+            setCanNavigate(true);
             setIsPlacingTrapTurn(true);
           }
           break;
@@ -62,7 +64,9 @@ export const WebSocketProvider = ({ children }) => {
         websocketTraps,
         setWebsocketTraps,
         isPlacingTrapTurn,
+        setIsPlacingTrapTurn,
         level,
+        canNavigate,
       }}
     >
       {children}

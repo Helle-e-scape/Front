@@ -9,7 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const WaitingRoom = () => {
   const [playerList, setPlayerList] = useState([]);
-  const { socket } = useWebSocket();
+  const { canNavigate } = useWebSocket();
   const flatListRef = useRef(null);
   const scrollOffset = useRef(0);
   const [isScrolling, setIsScrolling] = useState(true);
@@ -33,27 +33,10 @@ useEffect(() => {
 
 
 useEffect(() => {
-  if (socket) {
-    socket.onmessage = (message) => {
-      const data = JSON.parse(message.data); // Parse le message reçu
-
-      if (data.type === "join_room") {
-          
-          if (user._id != data.user._id && data.room._id == user.room._id)  {
-          const updateUserList = (newUser) => {            
-            setPlayerList((prevList) => [...prevList, newUser]); // Ajoute le nouvel utilisateur à la liste existante
-          };
-            
-          updateUserList(data.user);
-        };
-      };
-      
-      if (data.type === "gameState") {
-        navigation.navigate("Grid");
-      };
-    };
-  };
-}, [socket]);
+  if(canNavigate) {
+    navigation.navigate("Grid");
+  }
+}, [canNavigate]);
 
       /*useEffect(() => {
         const startScrolling = () => {

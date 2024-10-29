@@ -46,7 +46,7 @@ const GridScreen = () => {
   }, [websocketTraps, isPlacingTrapTurn, level]);
 
   setTimeout(() => {
-    navigation.navigate("Trap");
+    // navigation.navigate("Trap");
   }, 5000);
 
   const sendCoordinates = (x, y) => {
