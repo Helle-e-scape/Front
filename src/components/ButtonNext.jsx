@@ -4,12 +4,14 @@ import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { roomApi } from "../_api/room.api";
 import { useUser } from "../context/UserContext";
+import {useWebSocket} from "../context/WebSocketContext";
 
 
 const PixelButton2 = ({ title, roomCode }) => {
   const [isPressed, setIsPressed] = useState(false);
   const navigation = useNavigation();
   const {user, setUser} = useUser();
+  const {sendMessage} = useWebSocket();
 
   const handlePress = async () => {
     setIsPressed(true);
@@ -19,8 +21,10 @@ const PixelButton2 = ({ title, roomCode }) => {
         if (response != undefined) {
         setUser({ 
           ...user,
+
           room: response.room
         });     
+          
         setTimeout(() => {
           navigation.navigate(title);
         }, 1000)}
