@@ -22,6 +22,7 @@ const GridScreen = () => {
 
   const rowOffset = Math.floor(rows / 2);
   const colOffset = Math.floor(columns / 2);
+  const [limit, setLimit] = useState(2);
 
   const [selectedCell, setSelectedCell] = useState({ x: null, y: null });
   const [isModalVisible, setModalVisible] = useState(false);
@@ -37,9 +38,9 @@ const GridScreen = () => {
     }
   }, [websocketTraps]);
 
-  setTimeout(() => {
+  /*setTimeout(() => {
     navigation.navigate("Trap");
-  }, 5000);
+  }, 5000);*/
 
   const sendCoordinates = (x, y) => {
     const data = { type: 'placeTrap', data: { x, y }, nameTrap: 'Trap1', roomId: user.roomId, userId: user._id };
@@ -47,14 +48,23 @@ const GridScreen = () => {
   };
 
   const onCellPress = (x, y) => {
+    if (limit > 0) {
     setCellToConfirm({ x, y });
     setModalVisible(true);
+    }
+    else {
+      alert("You can't set traps anymore");
+    }
   };
 
   const confirmTrapPlacement = () => {
+    if (limit > 0) {
+      console.log("avant methode", limit);
     sendCoordinates(cellToConfirm.x, cellToConfirm.y);
     setSelectedCell(cellToConfirm);
     setModalVisible(false);
+    setLimit(prevLimit => prevLimit - 1);
+  };
   };
 
   const isTrap = (x, y) => {
