@@ -19,7 +19,6 @@ const WaitingRoom = () => {
 
 useEffect(() => {
   const fetchPlayerList = async () => {
-    navigation.navigate("Grid");
     try {
       const response = await authApi.findByIdRoom(user.roomId);
       setPlayerList(response.users); // Remplir la liste avec les utilisateurs récupérés via l'API
