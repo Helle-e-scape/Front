@@ -21,18 +21,11 @@ const Trap = ({ route }) => {
     const fetchTraps = async () => {
       try {
         const response = await trapUserApi.findAllByIdRoom(user.roomId);
-
-
         const allTrapsData = response.trap || [];
-
-        console.log(allTrapsData);
-        
         setAllTraps(allTrapsData);
         
         const userTraps = allTraps.filter(trap => trap.userId === user._id);
-        console.log(user._id);
         setTraps(userTraps);
-        console.log(userTraps);
       } catch (error) {
         console.error("Erreur lors de la récupération des pièges:", error);
       }

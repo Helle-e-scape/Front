@@ -5,7 +5,7 @@ import { Animated, View, StyleSheet, PanResponder, Text} from "react-native";
 const ButtonPerso = ({title}) => {
     const pan = useRef(new Animated.ValueXY()).current;
 
-  const panResponder = useRef(
+  /*const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
       onPanResponderMove: Animated.event([null, {dx: pan.x, dy: pan.y}]),
@@ -16,7 +16,7 @@ const ButtonPerso = ({title}) => {
         }).start();
       },
     }),
-  ).current;
+  ).current;*/
 
   return (
     <View style={styles.container}>
@@ -24,7 +24,8 @@ const ButtonPerso = ({title}) => {
         style={{
           transform: [{translateX: pan.x}, {translateY: pan.y}],
         }}
-        {...panResponder.panHandlers}>
+        //{...panResponder.panHandlers}
+        >
           <View style={styles.box}>
         <Text style={{textAlign: 'center', fontFamily: 'Minecraft'}}>{title}</Text>
         </View>
