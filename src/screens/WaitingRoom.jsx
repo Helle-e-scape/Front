@@ -17,14 +17,6 @@ const WaitingRoom = () => {
   const { user } = useUser();
   const navigation = useNavigation();
 
-const WaitingRoom = () => {
-  const [playerList, setPlayerList] = useState([]);
-  const { socket } = useWebSocket();
-  const flatListRef = useRef(null);
-  const scrollOffset = useRef(0);
-  const [isScrolling, setIsScrolling] = useState(true);
-  const scrollTimeoutRef = useRef(null);
-  const { user } = useUser();
 useEffect(() => {
   const fetchPlayerList = async () => {
     try {
