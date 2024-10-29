@@ -21,8 +21,10 @@ useEffect(() => {
   const fetchPlayerList = async () => {
     navigation.navigate("Grid");
     try {
-      const response = await authApi.findByIdRoom(user.roomId);
+      const response = await authApi.findByIdRoom(user.room._id);
+
       setPlayerList(response.users); // Remplir la liste avec les utilisateurs récupérés via l'API
+      
     } catch (error) {
       console.error('Error fetching players:', error);
     }
@@ -30,9 +32,6 @@ useEffect(() => {
   fetchPlayerList();
 }, []);
 
-setTimeout(() => {
-  navigation.navigate("Grid");
-}, 5000);
 
 useEffect(() => {
   if (socket) {
@@ -40,17 +39,18 @@ useEffect(() => {
       const data = JSON.parse(message.data); // Parse le message reçu
 
       if (data.type === "join_room") {
-              
-          if (user._id != data.user._id && data.room._id == user.room._id)  {        
-            
-          const updateUserList = (newUser) => {
-            console.log("new user dans la methode : ", newUser);
-            
+          
+          if (user._id != data.user._id && data.room._id == user.room._id)  {
+          const updateUserList = (newUser) => {            
             setPlayerList((prevList) => [...prevList, newUser]); // Ajoute le nouvel utilisateur à la liste existante
           };
             
           updateUserList(data.user);
         };
+      };
+      
+      if (data.type === "gameState") {
+        navigation.navigate("Grid");
       };
     };
   };
