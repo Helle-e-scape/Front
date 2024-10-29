@@ -5,6 +5,17 @@ import ButtonPerso from "../components/Element";
 import { useUser } from "../context/UserContext";
 import { authApi } from "../_api/user.api";
 import { useWebSocket } from "../context/WebSocketContext";
+import { useNavigation } from "@react-navigation/native";
+
+const WaitingRoom = () => {
+  const [playerList, setPlayerList] = useState([]);
+  const { socket } = useWebSocket();
+  const flatListRef = useRef(null);
+  const scrollOffset = useRef(0);
+  const [isScrolling, setIsScrolling] = useState(true);
+  const scrollTimeoutRef = useRef(null);
+  const { user } = useUser();
+  const navigation = useNavigation();
 
 const WaitingRoom = () => {
   const [playerList, setPlayerList] = useState([]);
@@ -17,7 +28,7 @@ const WaitingRoom = () => {
 useEffect(() => {
   const fetchPlayerList = async () => {
     try {
-      const response = await authApi.findByIdRoom(user.room._id);
+      const response = await authApi.findByIdRoom(user.roomId);
       setPlayerList(response.users); // Remplir la liste avec les utilisateurs récupérés via l'API
     } catch (error) {
       console.error('Error fetching players:', error);
@@ -25,6 +36,10 @@ useEffect(() => {
   };
   fetchPlayerList();
 }, []);
+
+setTimeout(() => {
+  navigation.navigate("Grid");
+}, 5000);
 
 useEffect(() => {
   if (socket) {
@@ -40,9 +55,8 @@ useEffect(() => {
             
             setPlayerList((prevList) => [...prevList, newUser]); // Ajoute le nouvel utilisateur à la liste existante
           };
-
+            
           updateUserList(data.user);
-          console.log("liste des user : ", playerList);
         };
       };
     };
@@ -116,15 +130,6 @@ useEffect(() => {
             )}
           />
         </View>
-        <Text style={styles.title}>Players List</Text>
-        <FlatList style={styles.list}
-          ref={flatListRef}
-          data={playerList}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <ButtonPerso title={item.name} style={styles.playerName}></ButtonPerso>
-          )}
-        />
     </ImageBackground>
   );
 }
